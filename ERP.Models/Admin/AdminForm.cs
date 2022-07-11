@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERP.Models.Admin;
 
-public class AdminForm
+public class AdminForm: BaseEntity<int>
 {
     [Required]
     [StringLength(100)]

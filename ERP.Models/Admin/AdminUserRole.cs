@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace ERP.Models.Admin;
 
-public class AdminUserRole
+public class AdminUserRole : BaseEntity<int>
 {
-    public virtual AdminRole? Role { get; set; }
-    public virtual EMPEmployee? Employee { get; set; }
+    public virtual AdminRole? AdminRole { get; set; }
+    public virtual EMPEmployee? EMPEmployee { get; set; }
 }

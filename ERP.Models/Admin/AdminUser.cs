@@ -9,7 +9,7 @@ using ERP.Models.Employees;
 
 namespace ERP.Models.Admin;
 
-public class AdminUser
+public class AdminUser : BaseEntity<int>
 {
     [Required]
     [StringLength(100)]
@@ -19,7 +19,7 @@ public class AdminUser
     [StringLength(100)]
     public string? PassWord { get; set; }
 
-    public virtual EMPEmployee? Employee { get; set; }
+    public virtual EMPEmployee? EMPEmployee { get; set; }
 
-    public virtual ICollection<AdminUserRole>? UserRole { get; set; }
+    public virtual ICollection<AdminUserRole>? AdminUserRole { get; set; }
 }

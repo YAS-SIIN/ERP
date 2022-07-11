@@ -1,38 +1,33 @@
 ﻿
 
+using ERP.Models.Admin;
+using ERP.Models.Employees;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Entities.Context;
 
-public class MyDataBase : DbContext   
+public class MyDataBase : DbContext
 {
 
     public MyDataBase(DbContextOptions<MyDataBase> options) : base(options)
     {
-       
+
     }
-    //public DbSet<User> Users { get; set; }
-    //public DbSet<Activity> Activities { get; set; }
-    //public DbSet<Schedule> Schedules { get; set; }
-    //public DbSet<Request> Requests { get; set; }
-    //public DbSet<Visit> Visits { get; set; }
+    public DbSet<AdminUser> AdminUsers { get; set; }
+    public DbSet<AdminRole> AdminRoles { get; set; }
+    public DbSet<AdminForm> AdminForms { get; set; }
+    public DbSet<AdminUserRole> AdminUserRoles { get; set; }
+    public DbSet<EMPEmployee> EMPEmployees { get; set; }
     //
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        modelBuilder.Entity<EMPEmployee>().HasIndex(b => b.EmpoloyeeNo).IsUnique();
+
+        modelBuilder.Entity<EMPEmployee>().HasIndex(b => b.IdentifyNo).IsUnique();
+
         base.OnModelCreating(modelBuilder);
     }
-    //protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //{
-    //    base.OnModelCreating(modelBuilder);
-
-    //    modelBuilder.Entity<User>().ToTable("User");
-    //    modelBuilder.Entity<Activity>().ToTable("Activity");
-    //    modelBuilder.Entity<Schedule>().ToTable("Schedule");
-    //    modelBuilder.Entity<Request>().ToTable("Request");
-    //    modelBuilder.Entity<Visit>().ToTable("Visit");
-
-    //    //modelBuilder.Seed();
-
-    //}
 
 }

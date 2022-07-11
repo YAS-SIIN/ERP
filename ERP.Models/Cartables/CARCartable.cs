@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace ERP.Models.Cartables;
 
-internal class CARCartable
+internal class CARCartable : BaseEntity<int>
 {
 }

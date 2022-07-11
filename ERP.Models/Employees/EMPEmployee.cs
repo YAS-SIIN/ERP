@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERP.Models.Employees;
 
-public class EMPEmployee
+public class EMPEmployee : BaseEntity<int>
 {
 
     [Required]
@@ -33,5 +33,9 @@ public class EMPEmployee
     [Required]
     [StringLength(10)]
     public string? IdentifyNo { get; set; }
+                              
+    [Required]
+    [StringLength(10)]
+    public string? DateOfBirth { get; set; }
 
 }

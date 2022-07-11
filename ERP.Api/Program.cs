@@ -1,5 +1,12 @@
+using ERP.Entities.Context;
+using ERP.Entities.GenericRepository;
+using ERP.Entities.UnitOfWork;
+using ERP.Models.Admin;
+using ERP.Service.Crud;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +19,29 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithExposedHeaders("X-Pagination"));
+});
+
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
+builder.Services.AddDbContext<MyDataBase>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:DatabaseConnection"]));
+
+//services.AddTransient<ISettingsService, SettingsService>();
+//services.AddSingleton<IConfiguration>(Configuration);
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+ 
+
+//builder.Services.AddScoped<ICrudService<AdminUser>, CrudService<AdminUser>>();
 
 var app = builder.Build();
 

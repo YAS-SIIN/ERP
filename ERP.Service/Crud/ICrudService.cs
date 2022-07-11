@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERP.Service.Crud;            
 
-internal interface ICrudService<T> where T : class
+public interface ICrudService<T> where T : class
 {
     IQueryable<T> GetAll();
     IQueryable<T> GetAll(Expression<Func<T, bool>> predicate);

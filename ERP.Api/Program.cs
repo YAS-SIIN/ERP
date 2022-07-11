@@ -39,9 +39,10 @@ builder.Services.AddDbContext<MyDataBase>(options => options.UseSqlServer(builde
 //services.AddSingleton<IConfiguration>(Configuration);
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
- 
 
-//builder.Services.AddScoped<ICrudService<AdminUser>, CrudService<AdminUser>>();
+
+builder.Services.AddScoped<IGenericRepository<AdminUser>, GenericRepository<AdminUser>>();
+builder.Services.AddScoped<ICrudService<AdminUser>, CrudService<AdminUser>>();
 
 var app = builder.Build();
 

@@ -37,6 +37,17 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
+    public void SaveChangesAsync()
+    {
+        try
+        {
+            _context.SaveChangesAsync();
+        }
+        catch
+        {
+        }
+    }
+
     public virtual void Dispose(bool disposing)
     {
         if (!this.disposed)

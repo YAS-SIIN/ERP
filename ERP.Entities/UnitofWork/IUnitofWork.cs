@@ -7,6 +7,7 @@ public interface IUnitOfWork : IDisposable
 {
     IGenericRepository<T> GetRepository<T>() where T : class;
 
-    void SaveChanges();
+    void SaveChanges();  
+    void SaveChangesAsync();
 
 }

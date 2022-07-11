@@ -21,9 +21,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _dbSet = context.Set<T>();
     }
 
-    public T ExistData()
+    public bool ExistData()
     {
-        return _dbSet.FirstOrDefault();
+        return _dbSet.Any();
     }
 
     public IQueryable<T> GetAll()
@@ -36,12 +36,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return _dbSet.Where(predicate);
     }
 
-    public virtual T GetById(object id)
+    public T GetById(object id)
     {
         return _dbSet.Find(id);
     }
 
-    public virtual T Get(Expression<Func<T, bool>> predicate)
+    public T Get(Expression<Func<T, bool>> predicate)
     {
         return _dbSet.Where(predicate).SingleOrDefault();
     }
@@ -80,5 +80,43 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         _dbSet.RemoveRange(entity);
     }
+    //--------------
 
+
+    public async Task<bool> ExistDataAsync()
+    {
+        return await _dbSet.AnyAsync();
+    }
+    public async Task<IQueryable<T>> GetAllAsync()
+    {
+        var data = await _dbSet.ToListAsync();
+        return data.AsQueryable();
+    }
+    public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
+    {
+          var data = await _dbSet.Where(predicate).ToListAsync();
+        return data.AsQueryable();
+    }
+
+    public async Task<T> GetByIdAsync(object id)
+    {
+        return await _dbSet.FindAsync(id);
+    }
+
+    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.Where(predicate).SingleOrDefaultAsync();
+    }
+
+    public async virtual void AddAsync(T entity)
+    {
+        await _dbSet.AddAsync(entity);
+    }
+
+    public async virtual void AddRangeAsync(List<T> entityList)
+    {
+        await _dbSet.AddRangeAsync(entityList);
+    }
+ 
+    
 }

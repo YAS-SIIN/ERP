@@ -38,4 +38,17 @@ public class EMPEmployee : BaseEntity<int>
     [StringLength(10)]
     public string? DateOfBirth { get; set; }
 
+    [Required]       
+    public short? Gender { get; set; }
+
+    [Required]
+    [StringLength(10)]
+    public string? HireDate { get; set; }
+
+    [Required]
+    [StringLength(10)]
+    public string? LeaveDate { get; set; }
+
+
+
 }

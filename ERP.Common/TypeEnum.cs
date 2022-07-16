@@ -1,21 +1,32 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ERP.Common
+namespace ERP.Common;
+
+public class TypeEnum
 {
-    public class TypeEnum
+    public enum UserStatus
     {
-        public enum UserStatus
-        {
 
-            [Display(Name = "Deactive")]
-            Submit = 0,
+        [Display(Name = "Deactive")]
+        Deactive = 0,
 
-            [Display(Name = "Active")]
-            InProgress = 2,
+        [Display(Name = "Active")]
+        Active = 2,
 
-            [Display(Name = "Deleted")]
-            Deleted = 3
-        }
-                      
+        [Display(Name = "Deleted")]
+        Deleted = 3
     }
+
+    public enum SessionStatus
+    {
+
+        [Display(Name = "Logout")]
+        Logout = 0,
+
+        [Display(Name = "Login")]
+        Login = 1,
+  
+    }
+
+
 }

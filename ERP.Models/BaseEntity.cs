@@ -20,7 +20,10 @@ public abstract class BaseEntity<TKey> : IEntity
 
     [Required]
     public DateTime CreateDateTime { get; set; }
-             
+
+    [Required]
+    public DateTime UpdateDateTime { get; set; }
+
     [StringLength(250)]
     public string? Description { get; set; }
 }

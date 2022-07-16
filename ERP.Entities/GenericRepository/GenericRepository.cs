@@ -26,6 +26,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return _dbSet.Any();
     }
 
+    public bool ExistData(Expression<Func<T, bool>> predicate)
+    {
+        return _dbSet.Where(predicate).Any();
+    }
+
     public IQueryable<T> GetAll()
     {
         return _dbSet;
@@ -81,12 +86,17 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _dbSet.RemoveRange(entity);
     }
     //--------------
-
-
+       
     public async Task<bool> ExistDataAsync()
     {
         return await _dbSet.AnyAsync();
     }
+    public async Task<bool> ExistDataAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.Where(predicate).AnyAsync();
+    }
+
+
     public async Task<IQueryable<T>> GetAllAsync()
     {
         var data = await _dbSet.ToListAsync();
@@ -108,12 +118,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await _dbSet.Where(predicate).SingleOrDefaultAsync();
     }
 
-    public async virtual void AddAsync(T entity)
+    public async virtual Task AddAsync(T entity)
     {
         await _dbSet.AddAsync(entity);
     }
 
-    public async virtual void AddRangeAsync(List<T> entityList)
+    public async virtual Task AddRangeAsync(List<T> entityList)
     {
         await _dbSet.AddRangeAsync(entityList);
     }

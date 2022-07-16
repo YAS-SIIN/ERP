@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ERP.Common\ERP.Common.csproj" />
     <ProjectReference Include="..\ERP.Dtos\ERP.Dtos.csproj" />
     <ProjectReference Include="..\ERP.Entities\ERP.Entities.csproj" />
     <ProjectReference Include="..\ERP.Models\ERP.Models.csproj" />

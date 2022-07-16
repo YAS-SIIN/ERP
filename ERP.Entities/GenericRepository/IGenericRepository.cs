@@ -9,7 +9,7 @@ public interface IGenericRepository<T> where T : class
 {
 
     bool ExistData();
-                                          
+    bool ExistData(Expression<Func<T, bool>> predicate);
 
     IQueryable<T> GetAll();
 
@@ -34,6 +34,8 @@ public interface IGenericRepository<T> where T : class
     //--------
 
     Task<bool> ExistDataAsync();
+    Task<bool> ExistDataAsync(Expression<Func<T, bool>> predicate);
+
     Task<IQueryable<T>> GetAllAsync();
 
     Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
@@ -42,9 +44,9 @@ public interface IGenericRepository<T> where T : class
 
     Task<T> GetAsync(Expression<Func<T, bool>> predicate);
 
-    void AddAsync(T entity);
+    Task AddAsync(T entity);
 
-    void AddRangeAsync(List<T> entityList);
+    Task AddRangeAsync(List<T> entityList);
      
 
 }

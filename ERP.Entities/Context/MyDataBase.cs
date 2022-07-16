@@ -2,6 +2,7 @@
 
 using ERP.Models.Admin;
 using ERP.Models.Employees;
+using ERP.Models.Other;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,7 @@ public class MyDataBase : DbContext
     public DbSet<AdminForm> AdminForms { get; set; }
     public DbSet<AdminUserRole> AdminUserRoles { get; set; }
     public DbSet<EMPEmployee> EMPEmployees { get; set; }
+    public DbSet<Session> Sessions { get; set; }
     //
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -49,6 +49,10 @@ public class EMPEmployee : BaseEntity<int>
     [StringLength(10)]
     public string? LeaveDate { get; set; }
 
+    [Required]
+    [StringLength(11)]
+    public string? MobileNo { get; set; }
+
 
 
 }

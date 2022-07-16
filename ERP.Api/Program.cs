@@ -1,6 +1,9 @@
+using ERP.Api.Middlewares;
+
 using ERP.Entities.Context;
 using ERP.Entities.GenericRepository;
 using ERP.Entities.UnitOfWork;
+using ERP.Framework;
 using ERP.Models.Admin;
 using ERP.Service.Crud;
 
@@ -14,20 +17,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-});
+
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -46,21 +39,27 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+                    
+builder.Services.AddOptions<ApplicationOptions>().Bind(builder.Configuration.GetSection("ApplicationOptions"));
 
+builder.Services.AddAuthentication(x => { x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; }).AddJwtBearer();
 
-
-builder.Services.AddDbContext<MyDataBase>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:DatabaseConnection"]));
-
-//services.AddTransient<ISettingsService, SettingsService>();
-//services.AddSingleton<IConfiguration>(Configuration);
+builder.Services.AddDbContext<MyDataBase>(options => options.UseSqlServer(builder.Configuration["ApplicationOptions:ConnectionString"]));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+ERP.Service.DependencyResolver.Register(builder.Services);
+ERP.Common.DependencyResolver.Register(builder.Services);
 
-builder.Services.AddScoped<IGenericRepository<AdminUser>, GenericRepository<AdminUser>>();
-builder.Services.AddScoped<ICrudService<AdminUser>, CrudService<AdminUser>>();
+
+builder.Services.AddResponseCaching();
+
+
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<AuthenticatorMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -68,6 +67,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

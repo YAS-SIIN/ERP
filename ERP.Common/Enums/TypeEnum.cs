@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 
-namespace ERP.Common;
+namespace ERP.Common.Enums;
 
 public class TypeEnum
 {
@@ -25,7 +26,7 @@ public class TypeEnum
 
         [Display(Name = "Login")]
         Login = 1,
-  
+
     }
 
 

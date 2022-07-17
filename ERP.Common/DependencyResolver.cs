@@ -1,5 +1,5 @@
-﻿using ERP.Common;
-using ERP.Framework.Shared;
+﻿using ERP.Common.Shared;
+ 
 
 using Microsoft.Extensions.DependencyInjection;
 

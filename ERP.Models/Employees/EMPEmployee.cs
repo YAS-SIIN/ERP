@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ERP.Models.Admin;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -52,7 +54,6 @@ public class EMPEmployee : BaseEntity<int>
     [Required]
     [StringLength(11)]
     public string? MobileNo { get; set; }
-
-
+                                                     
 
 }

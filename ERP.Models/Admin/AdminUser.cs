@@ -6,11 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 using ERP.Models.Employees;
+using ERP.Models.Other;
 
 namespace ERP.Models.Admin;
 
 public class AdminUser : BaseEntity<int>
 {
+
+    public int EMPEmployeeId { get; set; }
+
     [Required]
     [StringLength(100)]
     public string? FirstName { get; set; }
@@ -38,4 +42,5 @@ public class AdminUser : BaseEntity<int>
     public virtual EMPEmployee? EMPEmployee { get; set; }
 
     public virtual ICollection<AdminUserRole>? AdminUserRole { get; set; }
+                                                 
 }

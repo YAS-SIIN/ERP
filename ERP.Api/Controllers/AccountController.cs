@@ -16,17 +16,15 @@ namespace ERP.Api.Controllers
     [ApiController]
     public class AccountController : ApiControllerBase
     {
-        private readonly ILogger<AccountController> _logger;
         public IConfiguration _configuration;
         private readonly IAccountService _accountService;             
-        public AccountController(ILogger<AccountController> logger, IConfiguration config, IAccountService accountService)
-        {
-            _logger = logger;
+        public AccountController( IConfiguration config, IAccountService accountService)
+        {                     
             _configuration = config;
             _accountService = accountService;
         }
                                                         
-        [HttpPost("login")]
+        [HttpPost, Route("[action]")]
         public async Task<ActionResult<ApiResultViewModel<LoginModel>>> LoginAsync([FromBody] UserLoginDto model)
         {
             var result = await _accountService.LoginAsync(model);
@@ -41,7 +39,7 @@ namespace ERP.Api.Controllers
 
         [Authorize]
         [HttpPost, Route("[action]")]
-        public async Task Logout()
+        public async Task LogoutAsync()
         {
             await _accountService.LogoutAsync(UserSession.Token);
         }

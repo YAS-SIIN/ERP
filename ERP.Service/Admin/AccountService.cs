@@ -4,19 +4,21 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Common;
+using ERP.Common.Enums;
+using ERP.Common.Shared;
 using ERP.Dtos.Admin;
+using ERP.Dtos.Other;
 using ERP.Entities.UnitOfWork;
 using ERP.Framework;
-using ERP.Framework.Exceptions;            
-using ERP.Framework.Shared;
+using ERP.Framework.Exceptions;
+
 using ERP.Models;
 using ERP.Models.Admin;
 using ERP.Models.Other;
 
 using Microsoft.Extensions.Options;
 
-using static ERP.Common.TypeEnum;
+using static ERP.Common.Enums.TypeEnum;
 
 namespace ERP.Service.Admin;
 
@@ -40,7 +42,7 @@ public class AccountService : IAccountService
         if (session == null)
             throw new ValidationException(ErrorList.NotFound, "Token is invalid.");
 
-        var account = await _uw.GetRepository<AdminUser>().GetAsync(x => x.Id == session.AccountId);
+        var account = await _uw.GetRepository<AdminUser>().GetAsync(x => x.Id == session.AdminUser.Id);
         if (account == null)
             throw new ValidationException(ErrorList.NotFound, "Account already exists.");
 
@@ -67,28 +69,29 @@ public class AccountService : IAccountService
         if (account == null)
             throw new ValidationException(ErrorList.NotFound, "Account not found.");
 
-        if (!_security.VerifyHashedPassword(account.PassWord, userLogin.passWord))
-            throw new ValidationException(ErrorList.NotFound, "Username or password is not valid.");
+        //if (!_security.VerifyHashedPassword(account.PassWord, userLogin.PassWord))
+        //    throw new ValidationException(ErrorList.NotFound, "Username or password is not valid.");
 
-        var sessionId = Guid.NewGuid().ToString();
+        var sessionUser = Guid.NewGuid().ToString();
         var expirationDate = DateTime.Today.AddDays(365);
 
 
-        var token = _jwtManager.GenerateToken(sessionId, account.Id, account.FirstName, account.LastName, expirationDate);
+        var token = _jwtManager.GenerateToken(sessionUser, account.Id, account.FirstName, account.LastName, expirationDate);
 
         var session = new Session()
         {
-            CreateDateTime = DateTime.Now,
+            CreateDateTime = DateTime.Now,    
+            SessionUser = sessionUser,
             UpdateDateTime = DateTime.Now,
             Status = (short)SessionStatus.Login,
-            AccountId = account.Id,
+            AdminUser = account,
             ExpirationDate = expirationDate,
             IsValid = true,
             Token = token
         };
 
-        await _uw.GetRepository<Session>().AddAsync(session);
-                                                                   
+         _uw.GetRepository<Session>().Add(session);
+        _uw.SaveChanges();
         return new LoginModel()
         {
             ExpirationDate = session.ExpirationDate,
@@ -112,6 +115,7 @@ public class AccountService : IAccountService
         session.UpdateDateTime = DateTime.Now;
 
          _uw.GetRepository<Session>().Update(session);
+        _uw.SaveChangesAsync();
     }
 
     public async Task ResetPasswordVerificationCodeAsync(string mobileNumber)
@@ -127,7 +131,8 @@ public class AccountService : IAccountService
 
         //await _notificationHandler.SendVerificationCodeAsync(mobileNumber, verificationCode, cancellationToken);
         _uw.GetRepository<AdminUser>().Update(currentAccount);
-  
+        _uw.SaveChangesAsync();
+
     }
 
     public async Task ResetPasswordAsync(string UserName, string password, string verificationCode)
@@ -145,6 +150,7 @@ public class AccountService : IAccountService
         currentAccount.VerificationCode = string.Empty;
 
         _uw.GetRepository<AdminUser>().Update(currentAccount);
+        _uw.SaveChangesAsync();
     }
 
 }

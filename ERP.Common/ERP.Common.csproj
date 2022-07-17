@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ERP.Dtos\ERP.Dtos.csproj" />
     <ProjectReference Include="..\ERP.Framework\ERP.Framework.csproj" />
   </ItemGroup>
 

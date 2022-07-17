@@ -10,6 +10,8 @@ namespace ERP.Models.Admin;
 
 public class AdminUserRole : BaseEntity<int>
 {
+    public int AdminRoleId { get; set; }     
+
     public virtual AdminRole? AdminRole { get; set; }
-    public virtual EMPEmployee? EMPEmployee { get; set; }
+
 }

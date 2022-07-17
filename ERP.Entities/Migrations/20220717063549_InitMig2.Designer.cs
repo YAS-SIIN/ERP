@@ -4,6 +4,7 @@ using ERP.Entities.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Entities.Migrations
 {
     [DbContext(typeof(MyDataBase))]
-    partial class MyDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20220717063549_InitMig2")]
+    partial class InitMig2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,6 +168,9 @@ namespace ERP.Entities.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<int?>("EMPEmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<short>("Status")
                         .HasColumnType("smallint");
 
@@ -177,6 +182,8 @@ namespace ERP.Entities.Migrations
                     b.HasIndex("AdminRoleId");
 
                     b.HasIndex("AdminUserId");
+
+                    b.HasIndex("EMPEmployeeId");
 
                     b.ToTable("AdminUserRoles");
                 });
@@ -275,7 +282,7 @@ namespace ERP.Entities.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("AdminUserId")
+                    b.Property<int>("AccountId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreateDateTime")
@@ -291,7 +298,7 @@ namespace ERP.Entities.Migrations
                     b.Property<bool>("IsValid")
                         .HasColumnType("bit");
 
-                    b.Property<string>("SessionUser")
+                    b.Property<string>("SessionId")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -308,8 +315,6 @@ namespace ERP.Entities.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AdminUserId");
 
                     b.ToTable("Sessions");
                 });
@@ -333,16 +338,13 @@ namespace ERP.Entities.Migrations
                         .WithMany("AdminUserRole")
                         .HasForeignKey("AdminUserId");
 
-                    b.Navigation("AdminRole");
-                });
-
-            modelBuilder.Entity("ERP.Models.Other.Session", b =>
-                {
-                    b.HasOne("ERP.Models.Admin.AdminUser", "AdminUser")
+                    b.HasOne("ERP.Models.Employees.EMPEmployee", "EMPEmployee")
                         .WithMany()
-                        .HasForeignKey("AdminUserId");
+                        .HasForeignKey("EMPEmployeeId");
 
-                    b.Navigation("AdminUser");
+                    b.Navigation("AdminRole");
+
+                    b.Navigation("EMPEmployee");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminRole", b =>

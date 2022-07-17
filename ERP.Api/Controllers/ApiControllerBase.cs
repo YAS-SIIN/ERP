@@ -1,5 +1,6 @@
 ﻿using ERP.Common;
 using ERP.Dtos.Exceptions;
+using ERP.Dtos.Other;
 
 using Microsoft.AspNetCore.Mvc;
 

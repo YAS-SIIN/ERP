@@ -1,13 +1,13 @@
-﻿using ERP.Framework.Shared;
+﻿ 
 
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 using System;
 using System.Linq;
 using System.Security.Cryptography;
- 
 
-namespace ERP.Common;
+
+namespace ERP.Common.Shared;
 
 public class Security : ISecurity
 {
@@ -89,9 +89,9 @@ public class Security : ISecurity
 
     private static uint ReadNetworkByteOrder(byte[] buffer, int offset)
     {
-        return ((uint)(buffer[offset + 0]) << 24)
-            | ((uint)(buffer[offset + 1]) << 16)
-            | ((uint)(buffer[offset + 2]) << 8)
-            | ((uint)(buffer[offset + 3]));
+        return (uint)buffer[offset + 0] << 24
+            | (uint)buffer[offset + 1] << 16
+            | (uint)buffer[offset + 2] << 8
+            | buffer[offset + 3];
     }
 }

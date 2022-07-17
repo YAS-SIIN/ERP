@@ -1,4 +1,4 @@
-﻿namespace ERP.Common;
+﻿namespace ERP.Dtos.Other;
 
 public class UserSessionModel
 {

@@ -13,7 +13,7 @@ namespace ERP.Models.Admin;
 public class AdminUser : BaseEntity<int>
 {
 
-    public int EMPEmployeeId { get; set; }
+    public int  EMPEmployeeId { get; set; }
 
     [Required]
     [StringLength(100)]

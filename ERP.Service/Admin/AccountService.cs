@@ -16,6 +16,7 @@ using ERP.Models;
 using ERP.Models.Admin;
 using ERP.Models.Other;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 using static ERP.Common.Enums.TypeEnum;
@@ -38,7 +39,8 @@ public class AccountService : IAccountService
 
     public async Task<AdminUser> GetAccountByToken(string token)
     {
-        var session = await _uw.GetRepository<Session>().GetAsync(x => x.Token == token && x.IsValid);
+       var session = _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.IsValid).Include(e => e.AdminUser).FirstOrDefault();
+        //var session = sessionLst.Where(x => x.Token == token && x.IsValid).FirstOrDefault();
         if (session == null)
             throw new ValidationException(ErrorList.NotFound, "Token is invalid.");
 

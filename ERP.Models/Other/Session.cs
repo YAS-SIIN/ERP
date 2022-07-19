@@ -7,10 +7,7 @@ using System.ComponentModel.DataAnnotations;
 namespace ERP.Models.Other
 {
     public class Session : BaseEntity<int>
-    {
-    
-        public int AdminUserId { get; set; }
-
+    {                                          
         [StringLength(500)]
         public string Token { get; set; }     
 

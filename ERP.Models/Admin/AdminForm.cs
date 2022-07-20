@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ERP.Models.Cartables;
+ 
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+ 
 
 namespace ERP.Models.Admin;
 
@@ -13,4 +11,5 @@ public class AdminForm: BaseEntity<int>
     [StringLength(100)]
     public string? FormName { get; set; }
 
+    public virtual ICollection<CARTable>? CARTable { get; set; }
 }

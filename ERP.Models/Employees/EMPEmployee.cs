@@ -1,11 +1,8 @@
-﻿using ERP.Models.Admin;
-
-using System;
-using System.Collections.Generic;
+﻿ 
+using ERP.Models.Cartables;
+ 
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+ 
 
 namespace ERP.Models.Employees;
 
@@ -54,6 +51,13 @@ public class EMPEmployee : BaseEntity<int>
     [Required]
     [StringLength(11)]
     public string? MobileNo { get; set; }
-                                                     
 
+    [Required]
+    [StringLength(200)]
+    public string? ImaghePath { get; set; }
+
+                             
+
+    public virtual ICollection<CARCartable>? CARCartable { get; set; }
+    public virtual ICollection<InOutRequestLeave>? InOutRequestLeave { get; set; }
 }

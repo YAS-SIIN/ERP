@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿ 
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+ 
 using ERP.Models.Employees;
-using ERP.Models.Other;
+ 
 
 namespace ERP.Models.Admin;
 
 public class AdminUser : BaseEntity<int>
 {
-
-    public int  EMPEmployeeId { get; set; }
-
+                     
     [Required]
     [StringLength(100)]
     public string? FirstName { get; set; }

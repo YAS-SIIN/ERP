@@ -1,11 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ERP.Models.Employees;
+ 
+using System.ComponentModel.DataAnnotations;
+ 
 
 namespace ERP.Models.Cartables;
 
-internal class CARCartable : BaseEntity<int>
+public class CARCartable : BaseEntity<double>
 {
+    [Required]
+    [StringLength(20)]
+    public string? FieldCode { get; set; }
+
+    [Required]          
+    public int? OrderNo { get; set; } = 0;
+
+    [Required]
+    public bool? DeleteFlag { get; set; }
+
+    [Required]
+    public short? ConfirmType { get; set; } = 0;
+
+    [Required]
+    [StringLength(10)]
+    public string? SignDate { get; set; } = "";
+
 }

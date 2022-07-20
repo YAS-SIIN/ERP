@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ERP.Models.Cartables;
+                  
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+ 
 
 namespace ERP.Models.Admin;
 
@@ -14,4 +12,5 @@ public class AdminRole : BaseEntity<int>
     [StringLength(100)]
     public string? RoleName { get; set; }
     public virtual ICollection<AdminUserRole>? AdminUserRole { get; set; }
+    public virtual ICollection<CARCartable>? CARCartable { get; set; }
 }

@@ -1,7 +1,6 @@
 ﻿
 using ERP.Models.Admin;
-
-using System;
+       
 using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.Other
@@ -21,3 +20,4 @@ namespace ERP.Models.Other
         public virtual AdminUser? AdminUser { get; set; }
     }
 }
+

@@ -17,5 +17,6 @@ public class DependencyResolver
         services.AddScoped<IGenericRepository<EMPEmployee>, GenericRepository<EMPEmployee>>();
         services.AddScoped<ICrudService<EMPEmployee>, CrudService<EMPEmployee>>();
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IEmployeesService, EmployeesService>();
     }
 }

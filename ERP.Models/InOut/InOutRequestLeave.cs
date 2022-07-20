@@ -24,11 +24,13 @@ public class InOutRequestLeave : BaseEntity<int>
     [StringLength(10)]
     public string ToDate { get; set; } = "";
 
-    [StringLength(10)]
-    public TimeSpan FromTime { get; set; } = DateTime.Now.TimeOfDay;
-              
-    [StringLength(10)]
-    public TimeSpan ToTime { get; set; } = DateTime.Now.TimeOfDay;
+    [Required]
+    [StringLength(8)]
+    public string FromTime { get; set; } = "";
+
+    [Required]
+    [StringLength(8)]
+    public string ToTime { get; set; } = "";
 
     [Required]
     public int LeaveDay { get; set; }

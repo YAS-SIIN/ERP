@@ -39,7 +39,7 @@ public class EmployeesService : IEmployeesService
                                                  
         await _uw.GetRepository<EMPEmployee>().AddAsync(model);
         AdminUser user = new AdminUser();
-        model.EmpoloyeeNo = await _uw.GetRepository<EMPEmployee>().GetAllAsync().Result.MaxAsync(x => x.EmpoloyeeNo) + 1;
+        model.EmpoloyeeNo = await _uw.GetRepository<EMPEmployee>().GetAll().MaxAsync(x => x.EmpoloyeeNo) + 1;
         model.EmpoloyeeNo = model.EmpoloyeeNo == 0 || model.EmpoloyeeNo == 1 ? 10001 : model.EmpoloyeeNo;
         model.Status = (short)BaseStatus.Deactive;
         model.CreateDateTime = DateTime.Now;

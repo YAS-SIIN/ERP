@@ -11,13 +11,13 @@ namespace ERP.Models.Other
         public string Token { get; set; }     
 
         [StringLength(500)]
-        public string SessionUser { get; set; }  
+        public string SessionUser { get; set; }
 
         public DateTime ExpirationDate { get; set; }         
 
         public bool IsValid { get; set; }
 
-        public virtual AdminUser? AdminUser { get; set; }
+        public virtual AdminUser AdminUser { get; set; }
     }
 }
 

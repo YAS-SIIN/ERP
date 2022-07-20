@@ -26,7 +26,7 @@ public class AdminUser : BaseEntity<int>
     public string? UserName { get; set; }
 
     [Required]
-    [StringLength(100)]
+    [StringLength(200)]
     public string? PassWord { get; set; }
 
     [Required]

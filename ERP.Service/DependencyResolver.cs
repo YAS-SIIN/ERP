@@ -1,6 +1,7 @@
 ﻿
 using ERP.Entities.GenericRepository;
 using ERP.Models.Admin;
+using ERP.Models.Employees;
 using ERP.Service.Admin;
 using ERP.Service.Crud;
 
@@ -13,7 +14,8 @@ public class DependencyResolver
     public static void Register(IServiceCollection services)
     {
         services.AddScoped<IGenericRepository<AdminUser>, GenericRepository<AdminUser>>();
-        services.AddScoped<ICrudService<AdminUser>, CrudService<AdminUser>>();
+        services.AddScoped<IGenericRepository<EMPEmployee>, GenericRepository<EMPEmployee>>();
+        services.AddScoped<ICrudService<EMPEmployee>, CrudService<EMPEmployee>>();
         services.AddScoped<IAccountService, AccountService>();
     }
 }

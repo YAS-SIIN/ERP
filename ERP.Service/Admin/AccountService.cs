@@ -92,7 +92,7 @@ public class AccountService : IAccountService
             Token = token
         };
 
-         _uw.GetRepository<Session>().Add(session);
+        await _uw.GetRepository<Session>().AddAsync(session);
         _uw.SaveChanges();
         return new LoginModel()
         {
@@ -117,7 +117,7 @@ public class AccountService : IAccountService
         session.UpdateDateTime = DateTime.Now;
 
          _uw.GetRepository<Session>().Update(session);
-        _uw.SaveChangesAsync();
+        _uw.SaveChanges();
     }
 
     public async Task ResetPasswordVerificationCodeAsync(string mobileNumber)
@@ -129,7 +129,7 @@ public class AccountService : IAccountService
         var verificationCode = new Random().Next(1000, 9999).ToString();
         currentAccount.VerificationCode = verificationCode;
         currentAccount.UpdateDateTime = DateTime.Now;
-        currentAccount.Status = (short)UserStatus.Active;
+        currentAccount.Status = (short)BaseStatus.Active;
 
         //await _notificationHandler.SendVerificationCodeAsync(mobileNumber, verificationCode, cancellationToken);
         _uw.GetRepository<AdminUser>().Update(currentAccount);
@@ -148,7 +148,7 @@ public class AccountService : IAccountService
                                             
         currentAccount.PassWord = _security.HashPassword(password);
         currentAccount.UpdateDateTime = DateTime.Now;
-        currentAccount.Status = (short)UserStatus.Active;
+        currentAccount.Status = (short)BaseStatus.Active;
         currentAccount.VerificationCode = string.Empty;
 
         _uw.GetRepository<AdminUser>().Update(currentAccount);

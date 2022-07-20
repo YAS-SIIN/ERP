@@ -4,6 +4,7 @@ using ERP.Entities.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Entities.Migrations
 {
     [DbContext(typeof(MyDataBase))]
-    partial class MyDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20220720061001_AddCartableAndInOutTables")]
+    partial class AddCartableAndInOutTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,8 +157,8 @@ namespace ERP.Entities.Migrations
 
                     b.Property<string>("PassWord")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<short>("Status")
                         .HasColumnType("smallint");
@@ -225,13 +227,15 @@ namespace ERP.Entities.Migrations
                     b.Property<int?>("AdminRoleId")
                         .HasColumnType("int");
 
-                    b.Property<short>("ConfirmType")
+                    b.Property<short?>("ConfirmType")
+                        .IsRequired()
                         .HasColumnType("smallint");
 
                     b.Property<DateTime>("CreateDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("DeleteFlag")
+                    b.Property<bool?>("DeleteFlag")
+                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.Property<string>("Description")
@@ -246,7 +250,8 @@ namespace ERP.Entities.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("OrderNo")
+                    b.Property<int?>("OrderNo")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("SignDate")
@@ -284,7 +289,8 @@ namespace ERP.Entities.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("OrderNo")
+                    b.Property<int?>("OrderNo")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("SignName")
@@ -369,22 +375,24 @@ namespace ERP.Entities.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<TimeSpan>("FromTime")
+                    b.Property<TimeSpan?>("FromTime")
                         .HasMaxLength(10)
                         .HasColumnType("time");
 
-                    b.Property<int>("LeaveDay")
+                    b.Property<int?>("LeaveDay")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("LeaveReason")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("LeaveTime")
+                    b.Property<int?>("LeaveTime")
+                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<short>("LeaveType")
+                    b.Property<short?>("LeaveType")
+                        .IsRequired()
                         .HasColumnType("smallint");
 
                     b.Property<string>("RequestDate")
@@ -392,7 +400,8 @@ namespace ERP.Entities.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<short>("RequestLeaveType")
+                    b.Property<short?>("RequestLeaveType")
+                        .IsRequired()
                         .HasColumnType("smallint");
 
                     b.Property<short>("Status")
@@ -403,7 +412,7 @@ namespace ERP.Entities.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<TimeSpan>("ToTime")
+                    b.Property<TimeSpan?>("ToTime")
                         .HasMaxLength(10)
                         .HasColumnType("time");
 
@@ -437,8 +446,10 @@ namespace ERP.Entities.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("EmpoloyeeNo")
-                        .HasColumnType("int");
+                    b.Property<string>("EmpoloyeeNo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FatherName")
                         .IsRequired()
@@ -450,7 +461,8 @@ namespace ERP.Entities.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<short>("Gender")
+                    b.Property<short?>("Gender")
+                        .IsRequired()
                         .HasColumnType("smallint");
 
                     b.Property<string>("HireDate")
@@ -513,7 +525,7 @@ namespace ERP.Entities.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AdminUserId")
+                    b.Property<int?>("AdminUserId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreateDateTime")
@@ -615,9 +627,7 @@ namespace ERP.Entities.Migrations
                 {
                     b.HasOne("ERP.Models.Admin.AdminUser", "AdminUser")
                         .WithMany()
-                        .HasForeignKey("AdminUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AdminUserId");
 
                     b.Navigation("AdminUser");
                 });

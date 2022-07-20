@@ -5,19 +5,7 @@ namespace ERP.Common.Enums;
 
 public class TypeEnum
 {
-    public enum UserStatus
-    {
-
-        [Display(Name = "Deactive")]
-        Deactive = 0,
-
-        [Display(Name = "Active")]
-        Active = 2,
-
-        [Display(Name = "Deleted")]
-        Deleted = 3
-    }
-
+ 
     public enum SessionStatus
     {
 
@@ -29,5 +17,17 @@ public class TypeEnum
 
     }
 
+    public enum BaseStatus
+    {
+
+        [Display(Name = "Deactive")]
+        Deactive = 0,
+
+        [Display(Name = "Active")]
+        Active = 2,
+
+        [Display(Name = "Deleted")]
+        Deleted = 3
+    }
 
 }

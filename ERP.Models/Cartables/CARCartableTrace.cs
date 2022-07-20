@@ -8,14 +8,14 @@ public class CARCartableTrace : BaseEntity<double>
 {
  
     [Required]          
-    public int? OrderNo { get; set; }
+    public int OrderNo { get; set; }
  
     [Required]
     [StringLength(10)]
-    public string? SignTitle { get; set; }
+    public string SignTitle { get; set; }
 
     [Required]
     [StringLength(10)]
-    public string? SignName { get; set; }
+    public string SignName { get; set; }
    
 }

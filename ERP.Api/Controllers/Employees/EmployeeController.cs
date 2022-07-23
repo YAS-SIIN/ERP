@@ -18,11 +18,12 @@ public class EmployeeController : ApiControllerBase
     private readonly IEmployeesService _employeesService;
     public EmployeeController(ICrudService<EMPEmployee> crudService, IEmployeesService employeesService)
     {
+  
         _crudService = crudService;
         _employeesService = employeesService;
     }
 
-    [HttpGet]
+    [HttpPost, Route("[action]")]
     [Authorize]
     public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> GetAsync([FromBody] EMPEmployee model)
     {
@@ -63,9 +64,9 @@ public class EmployeeController : ApiControllerBase
 
     [HttpDelete]
     [Authorize]
-    public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> DeleteAsync([FromBody] EMPEmployee model)
+    public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> DeleteAsync([FromBody] int Id)
     {
-        var result = await _employeesService.DeleteEmployeeAsync(model);
+        var result = await _employeesService.DeleteEmployeeAsync(Id);
 
         return OkData(result);
     }

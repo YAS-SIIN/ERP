@@ -37,20 +37,24 @@ public class EmployeesService : IEmployeesService
     public async Task<EMPEmployee> InsertEmployeeAsync(EMPEmployee model)
     {
                                                  
-        await _uw.GetRepository<EMPEmployee>().AddAsync(model);
-        AdminUser user = new AdminUser();
+  
         model.EmpoloyeeNo = await _uw.GetRepository<EMPEmployee>().GetAll().MaxAsync(x => x.EmpoloyeeNo) + 1;
         model.EmpoloyeeNo = model.EmpoloyeeNo == 0 || model.EmpoloyeeNo == 1 ? 10001 : model.EmpoloyeeNo;
         model.Status = (short)BaseStatus.Deactive;
         model.CreateDateTime = DateTime.Now;
 
+        await _uw.GetRepository<EMPEmployee>().AddAsync(model);
+
+        AdminUser user = new AdminUser() { EMPEmployee = model };
         user.FirstName = model.FirstName;
         user.LastName = model.LastName;
+        user.UserName = model.EmpoloyeeNo.ToString();
+        user.MobileNo = model.MobileNo;
         user.PassWord = _security.HashPassword(model.NationalCode);
         user.Status = (short)BaseStatus.Deactive;
         user.CreateDateTime = DateTime.Now;
+        user.VerificationCode = "";
 
-        await _uw.GetRepository<EMPEmployee>().AddAsync(model);
         await _uw.GetRepository<AdminUser>().AddAsync(user);
 
         _uw.SaveChanges();
@@ -80,8 +84,9 @@ public class EmployeesService : IEmployeesService
         return model;
     }
 
-    public async Task<EMPEmployee> DeleteEmployeeAsync(EMPEmployee model)
+    public async Task<EMPEmployee> DeleteEmployeeAsync(int Id)
     {
+        EMPEmployee model = await _uw.GetRepository<EMPEmployee>().GetByIdAsync(Id);
         AdminUser user = await _uw.GetRepository<AdminUser>().GetAllAsync().Result.Include(x => x.EMPEmployee).Where(x => x.EMPEmployee.Id == model.Id).FirstOrDefaultAsync();
                                           
          _uw.GetRepository<EMPEmployee>().Delete(model);

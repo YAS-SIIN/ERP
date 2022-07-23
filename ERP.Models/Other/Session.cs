@@ -17,7 +17,7 @@ namespace ERP.Models.Other
 
         public bool IsValid { get; set; }
 
-        public virtual AdminUser AdminUser { get; set; }
+        public virtual AdminUser? AdminUser { get; set; }
     }
 }
 

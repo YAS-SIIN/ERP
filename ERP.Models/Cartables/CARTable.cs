@@ -10,5 +10,5 @@ public class CARTable : BaseEntity<int>
     [StringLength(20)]
     public string TableName { get; set; }
                                                         
-    public virtual ICollection<CARCartableTrace> CARCartableTrace { get; set; }
+    public virtual ICollection<CARCartableTrace>? CARCartableTrace { get; set; }
 }

@@ -11,5 +11,5 @@ public class AdminForm: BaseEntity<int>
     [StringLength(100)]
     public string FormName { get; set; }
 
-    public virtual ICollection<CARTable> CARTable { get; set; }
+    public virtual ICollection<CARTable>? CARTable { get; set; }
 }

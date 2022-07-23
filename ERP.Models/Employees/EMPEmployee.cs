@@ -11,7 +11,7 @@ public class EMPEmployee : BaseEntity<int>
 
     [Required]
     [StringLength(100)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
     [Required]
     [StringLength(100)]
@@ -55,6 +55,6 @@ public class EMPEmployee : BaseEntity<int>
     [StringLength(200)]
     public string ImaghePath { get; set; }
                                                              
-    public virtual ICollection<CARCartable> CARCartable { get; set; }
-    public virtual ICollection<InOutRequestLeave> InOutRequestLeave { get; set; }
+    public virtual ICollection<CARCartable>? CARCartable { get; set; }
+    public virtual ICollection<InOutRequestLeave>? InOutRequestLeave { get; set; }
 }

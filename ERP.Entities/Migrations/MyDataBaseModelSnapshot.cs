@@ -55,7 +55,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("AdminSubSystemId");
 
-                    b.ToTable("AdminForms");
+                    b.ToTable("AdminForms", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminRole", b =>
@@ -86,7 +86,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdminRoles");
+                    b.ToTable("AdminRoles", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminSubSystem", b =>
@@ -117,7 +117,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdminSubSystems");
+                    b.ToTable("AdminSubSystems", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminUser", b =>
@@ -178,7 +178,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("EMPEmployeeId");
 
-                    b.ToTable("AdminUsers");
+                    b.ToTable("AdminUsers", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminUserRole", b =>
@@ -214,7 +214,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("AdminUserId");
 
-                    b.ToTable("AdminUserRoles");
+                    b.ToTable("AdminUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartable", b =>
@@ -266,7 +266,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("EMPEmployeeId");
 
-                    b.ToTable("CARCartables");
+                    b.ToTable("CARCartables", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartableTrace", b =>
@@ -307,7 +307,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("CARTableId");
 
-                    b.ToTable("CARCartableTrace");
+                    b.ToTable("CARCartableTrace", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARTable", b =>
@@ -343,7 +343,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("AdminFormId");
 
-                    b.ToTable("CARTable");
+                    b.ToTable("CARTable", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.InOutRequestLeave", b =>
@@ -416,7 +416,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("EMPEmployeeId");
 
-                    b.ToTable("InOutRequestLeaves");
+                    b.ToTable("InOutRequestLeaves", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Employees.EMPEmployee", b =>
@@ -504,7 +504,7 @@ namespace ERP.Entities.Migrations
                     b.HasIndex("IdentifyNo")
                         .IsUnique();
 
-                    b.ToTable("EMPEmployees");
+                    b.ToTable("EMPEmployees", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Other.Session", b =>
@@ -551,7 +551,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("AdminUserId");
 
-                    b.ToTable("Sessions");
+                    b.ToTable("Sessions", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminForm", b =>

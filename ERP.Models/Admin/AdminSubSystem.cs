@@ -8,7 +8,7 @@ public class AdminSubSystem : BaseEntity<int>
 {
     [Required]
     [StringLength(100)]
-    public string? SubSystemName { get; set; }
+    public string SubSystemName { get; set; }
 
     public virtual ICollection<AdminForm>? AdminForm { get; set; }
 }

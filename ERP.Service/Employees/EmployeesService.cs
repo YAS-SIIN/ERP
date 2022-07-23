@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
+﻿
 using ERP.Common.Enums;
 using ERP.Common.Shared;
-using ERP.Dtos.Admin;
-using ERP.Dtos.Other;
+using ERP.Dtos.Employees;
 using ERP.Entities.UnitOfWork;
-using ERP.Framework;
 using ERP.Framework.Exceptions;
-
-using ERP.Models;
 using ERP.Models.Admin;
 using ERP.Models.Employees;
-using ERP.Models.Other;
+ 
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+
+using System.Net.Http.Headers;
 
 using static ERP.Common.Enums.TypeEnum;
 
@@ -27,30 +19,47 @@ namespace ERP.Service.Admin;
 public class EmployeesService : IEmployeesService
 {
     private readonly ISecurity _security;
-    private readonly IUnitOfWork _uw;  
+    private readonly IUnitOfWork _uw;
+    private static readonly string[] VALID_FILE_TYPES = {   "image/bmp", "image/png", "image/jpeg" };
     public EmployeesService(IUnitOfWork uw, ISecurity security)
     {
         _security = security;
         _uw = uw;
     }
 
-    public async Task<EMPEmployee> InsertEmployeeAsync(EMPEmployee model)
+    public async Task<EMPEmployee> InsertEmployeeAsync(EmplopyeeInDto model)
     {
-                                                 
-  
-        model.EmpoloyeeNo = await _uw.GetRepository<EMPEmployee>().GetAll().MaxAsync(x => x.EmpoloyeeNo) + 1;
-        model.EmpoloyeeNo = model.EmpoloyeeNo == 0 || model.EmpoloyeeNo == 1 ? 10001 : model.EmpoloyeeNo;
-        model.Status = (short)BaseStatus.Deactive;
-        model.CreateDateTime = DateTime.Now;
+        if (model.UploadFile.File.Length <= 0) throw new ValidationException(ErrorList.NotFoundFile, "عکس پرسنلی انتخاب نشده است.");
 
-        await _uw.GetRepository<EMPEmployee>().AddAsync(model);
 
-        AdminUser user = new AdminUser() { EMPEmployee = model };
-        user.FirstName = model.FirstName;
-        user.LastName = model.LastName;
-        user.UserName = model.EmpoloyeeNo.ToString();
-        user.MobileNo = model.MobileNo;
-        user.PassWord = _security.HashPassword(model.NationalCode);
+        if (!VALID_FILE_TYPES.Contains(model.UploadFile.File.ContentType.ToLower()))
+                throw new ValidationException(ErrorList.FileFormat, "فرمت عکس مجاز نمی باشد.");
+
+
+        model.EMPEmployee.EmpoloyeeNo = await _uw.GetRepository<EMPEmployee>().GetAll().MaxAsync(x => x.EmpoloyeeNo) + 1;
+        model.EMPEmployee.EmpoloyeeNo = model.EMPEmployee.EmpoloyeeNo == 0 || model.EMPEmployee.EmpoloyeeNo == 1 ? 10001 : model.EMPEmployee.EmpoloyeeNo;
+
+        var folderName = Path.Combine("Resources", "Employee");
+        var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        var fileName =  "EmployeePic_" + model.EMPEmployee.EmpoloyeeNo + Path.GetExtension(model.UploadFile.File.FileName);
+        var fullPath = Path.Combine(pathToSave, fileName);
+      
+        using (var stream = new FileStream(fullPath, FileMode.Create))
+        {
+            model.UploadFile.File.CopyTo(stream);
+        }
+        model.EMPEmployee.ImaghePath = fullPath;
+        model.EMPEmployee.Status = (short)BaseStatus.Deactive;
+        model.EMPEmployee.CreateDateTime = DateTime.Now;
+
+        await _uw.GetRepository<EMPEmployee>().AddAsync(model.EMPEmployee);
+
+        AdminUser user = new AdminUser() { EMPEmployee = model.EMPEmployee };
+        user.FirstName = model.EMPEmployee.FirstName;
+        user.LastName = model.EMPEmployee.LastName;
+        user.UserName = model.EMPEmployee.EmpoloyeeNo.ToString();
+        user.MobileNo = model.EMPEmployee.MobileNo;
+        user.PassWord = _security.HashPassword(model.EMPEmployee.NationalCode);
         user.Status = (short)BaseStatus.Deactive;
         user.CreateDateTime = DateTime.Now;
         user.VerificationCode = "";
@@ -59,7 +68,7 @@ public class EmployeesService : IEmployeesService
 
         _uw.SaveChanges();
 
-        return model;
+        return model.EMPEmployee;
     }
 
 

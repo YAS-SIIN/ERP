@@ -18,4 +18,5 @@ public class CARCartableTrace : BaseEntity<double>
     [StringLength(10)]
     public string SignName { get; set; }
    
+
 }

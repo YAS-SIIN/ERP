@@ -12,4 +12,5 @@ public class AdminForm: BaseEntity<int>
     public string FormName { get; set; }
 
     public virtual ICollection<CARTable>? CARTable { get; set; }
+    public virtual AdminSubSystem? AdminSubSystem { get; set; }
 }

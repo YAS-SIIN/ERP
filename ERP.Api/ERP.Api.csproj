@@ -39,4 +39,8 @@
     <ProjectReference Include="..\ERP.Service\ERP.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\Employee\" />
+  </ItemGroup>
+
 </Project>

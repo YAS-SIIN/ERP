@@ -14,8 +14,4 @@
     <ProjectReference Include="..\ERP.Models\ERP.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Employees\" />
-  </ItemGroup>
-
 </Project>

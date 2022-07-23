@@ -59,6 +59,22 @@ public class AccountService : IAccountService
         return await _uw.GetRepository<Session>().ExistDataAsync(x => x.Token == token && x.IsValid);
     }
 
+    public async Task<bool> IsAuthenticatedRole(string token, string role)
+    {
+        if (string.IsNullOrEmpty(token.Trim()))
+            throw new ValidationException(ErrorList.NotFound, "Token is required.");
+
+        var session = await _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.IsValid).Include(x=>x.AdminUser).ToListAsync();
+
+        //var aa = await _uw.GetRepository<AdminRole>().GetAll().Include(x => x.AdminUserRole).Where(a=>a.RoleName == role && a.AdminUserRole).ToListAsync();
+
+        if (session == null)
+            throw new ValidationException(ErrorList.NotFound, "Session not found.");
+        
+        return await _uw.GetRepository<Session>().ExistDataAsync(x => x.Token == token && x.IsValid);
+
+    }
+
     public async Task<LoginModel> LoginAsync(UserLoginDto userLogin)
     {
         if (string.IsNullOrEmpty(userLogin.UserName.Trim()))

@@ -1,4 +1,5 @@
-﻿using ERP.Common;
+﻿using ERP.Api.Middlewares;
+using ERP.Dtos.Employees;
 using ERP.Dtos.Exceptions;
 using ERP.Models.Employees;
 using ERP.Service.Admin;
@@ -33,16 +34,21 @@ public class EmployeeController : ApiControllerBase
     }
 
     [HttpPost]
-    [Authorize]
-    public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> PostAsync([FromBody] EMPEmployee model)
+    [Authorize(Role = "Test")]
+    public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> PostAsync([FromBody] EmplopyeeInDto model)
     {
         if (!ModelState.IsValid)
         {
             //ModelState.AddModelError("", "This record already exists."); // a cross field validation
             return BadRequest(ModelState);
         }
+        if (model.UploadFile.File.Length <= 0)
+        {
+            ModelState.AddModelError("", "The Employee Picture Not found."); // a cross field validation
+            return BadRequest(ModelState);
+        }
 
-        var result = await _employeesService.InsertEmployeeAsync(model);
+            var result = await _employeesService.InsertEmployeeAsync(model);
 
         return OkData(result);
     }

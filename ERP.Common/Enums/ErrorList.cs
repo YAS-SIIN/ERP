@@ -19,5 +19,12 @@ namespace ERP.Common.Enums
 
         [Display(Name = "خطایی در انجتم عملیات رخ داده است.")]
         public const string Error = "102";
+
+
+        [Display(Name = "فرمت فایل مجاز نمی باشد.")]
+        public const string FileFormat = "103";
+
+        [Display(Name = "فایل انتخاب نشده است.")]
+        public const string NotFoundFile = "104";
     }
 }

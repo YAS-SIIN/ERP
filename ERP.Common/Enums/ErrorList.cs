@@ -26,5 +26,11 @@ namespace ERP.Common.Enums
 
         [Display(Name = "فایل انتخاب نشده است.")]
         public const string NotFoundFile = "104";
+
+        [Display(Name = "شما به این عملیات دسترسی ندارید.")]
+        public const string NotAccess = "105";
+
+        [Display(Name = "شما وارد سیستم شده اید.")]
+        public const string LoginedUser = "106";
     }
 }

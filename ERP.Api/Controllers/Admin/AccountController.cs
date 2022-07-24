@@ -1,4 +1,5 @@
-﻿using ERP.Api.Middlewares;      
+﻿using ERP.Api.Middlewares;
+using ERP.Common.Enums;
 using ERP.Dtos.Admin;
 using ERP.Dtos.Exceptions;
 using ERP.Framework.Exceptions;
@@ -24,6 +25,11 @@ public class AccountController : ApiControllerBase
     [HttpPost, Route("[action]")]
     public async Task<ActionResult<ApiResultViewModel<LoginModel>>> LoginAsync([FromBody] UserLoginDto model)
     {
+        if (!ModelState.IsValid)
+        {
+            //ModelState.AddModelError("", "This record already exists."); // a cross field validation
+            return BadRequest(ModelState);
+        }
         var result = await _accountService.LoginAsync(model);
 
         return OkData(new LoginModel()
@@ -54,7 +60,7 @@ public class AccountController : ApiControllerBase
     public async Task ResetPasswordVerificationCodeAsync([FromBody] ResetPasswordVerificationCodeInputModel model)
     {
         if (UserSession != null && UserSession?.UserId != null)
-            throw new ValidationException("100", "You're logged-in already.");
+            throw new ValidationException(ErrorList.LoginedUser, "You're logged-in already.");           
 
         await _accountService.ResetPasswordVerificationCodeAsync(model.MobileNumber);
     }
@@ -63,7 +69,7 @@ public class AccountController : ApiControllerBase
     public async Task ResetPassword([FromBody] ResetPasswordInputModel model)
     {
         if (UserSession != null && UserSession?.UserId != null)
-            throw new ValidationException("100", "You're logged-in already.");
+            throw new ValidationException(ErrorList.LoginedUser, "You're logged-in already.");
 
         await _accountService.ResetPasswordAsync(model.MobileNumber, model.Password, model.VerificationCode);
     }

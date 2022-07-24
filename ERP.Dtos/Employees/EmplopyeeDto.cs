@@ -4,9 +4,8 @@ using ERP.Models.Employees;
  
 namespace ERP.Dtos.Employees
 {
-    public class EmplopyeeInDto
+    public class EmplopyeeInDto : UploadInputModel
     {
-        public EMPEmployee EMPEmployee { get; set; }
-        public UploadInputModel UploadFile { get; set; }
+        public string EMPEmployee { get; set; }
     }
 }

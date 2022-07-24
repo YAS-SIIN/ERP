@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
  
 using System;
-
+using System.Net;
 
 namespace ERP.Api.Middlewares;
 
@@ -27,21 +27,21 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
         if (session == null)
         {
             // not logged in
-            //context.Result = new UnauthorizedResult();
-            //return;
+            context.Result = new UnauthorizedResult();
+            return;
         }
-
-        Role = "Test";
+  
+       // Role = "Test";
         if (!String.IsNullOrEmpty(Role))
         {
            
- var accountService = context.HttpContext.RequestServices.GetService(typeof(IAccountService));
+            var accountService = context.HttpContext.RequestServices.GetService(typeof(IAccountService));
             var roleResault = (accountService as IAccountService).IsAuthenticatedRole(session.Token,Role);
-            
-                //context.Result = new UnauthorizedResult();
-                //return;
-             
-
+            if (roleResault.Result == false)
+            {
+                context.Result = new StatusCodeResult(StatusCodes.Status405MethodNotAllowed);
+                return;
+            }        
         }
     }
 }

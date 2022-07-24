@@ -6,8 +6,8 @@ using ERP.Entities.UnitOfWork;
 using ERP.Framework.Exceptions;
 using ERP.Models.Admin;
 using ERP.Models.Employees;
- 
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 using System.Net.Http.Headers;
@@ -27,39 +27,39 @@ public class EmployeesService : IEmployeesService
         _uw = uw;
     }
 
-    public async Task<EMPEmployee> InsertEmployeeAsync(EmplopyeeInDto model)
+    public async Task<EMPEmployee> InsertEmployeeAsync(EMPEmployee model, IFormFile File)
     {
-        if (model.UploadFile.File.Length <= 0) throw new ValidationException(ErrorList.NotFoundFile, "عکس پرسنلی انتخاب نشده است.");
+        if (File.Length <= 0) throw new ValidationException(ErrorList.NotFoundFile, "عکس پرسنلی انتخاب نشده است.");
 
 
-        if (!VALID_FILE_TYPES.Contains(model.UploadFile.File.ContentType.ToLower()))
+        if (!VALID_FILE_TYPES.Contains(File.ContentType.ToLower()))
                 throw new ValidationException(ErrorList.FileFormat, "فرمت عکس مجاز نمی باشد.");
 
 
-        model.EMPEmployee.EmpoloyeeNo = await _uw.GetRepository<EMPEmployee>().GetAll().MaxAsync(x => x.EmpoloyeeNo) + 1;
-        model.EMPEmployee.EmpoloyeeNo = model.EMPEmployee.EmpoloyeeNo == 0 || model.EMPEmployee.EmpoloyeeNo == 1 ? 10001 : model.EMPEmployee.EmpoloyeeNo;
+        model.EmpoloyeeNo = await _uw.GetRepository<EMPEmployee>().GetAll().MaxAsync(x => x.EmpoloyeeNo) + 1;
+        model.EmpoloyeeNo = model.EmpoloyeeNo == 0 || model.EmpoloyeeNo == 1 ? 10001 : model.EmpoloyeeNo;
 
-        var folderName = Path.Combine("Resources", "Employee");
+        var folderName = Path.Combine( "Resources", "Employee");
         var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-        var fileName =  "EmployeePic_" + model.EMPEmployee.EmpoloyeeNo + Path.GetExtension(model.UploadFile.File.FileName);
+        var fileName =  "EmployeePic_" + model.EmpoloyeeNo + Path.GetExtension(File.FileName);
         var fullPath = Path.Combine(pathToSave, fileName);
       
         using (var stream = new FileStream(fullPath, FileMode.Create))
         {
-            model.UploadFile.File.CopyTo(stream);
+            File.CopyTo(stream);
         }
-        model.EMPEmployee.ImaghePath = fullPath;
-        model.EMPEmployee.Status = (short)BaseStatus.Deactive;
-        model.EMPEmployee.CreateDateTime = DateTime.Now;
+        model.ImaghePath = fullPath;
+        model.Status = (short)BaseStatus.Deactive;
+        model.CreateDateTime = DateTime.Now;
 
-        await _uw.GetRepository<EMPEmployee>().AddAsync(model.EMPEmployee);
+        await _uw.GetRepository<EMPEmployee>().AddAsync(model);
 
-        AdminUser user = new AdminUser() { EMPEmployee = model.EMPEmployee };
-        user.FirstName = model.EMPEmployee.FirstName;
-        user.LastName = model.EMPEmployee.LastName;
-        user.UserName = model.EMPEmployee.EmpoloyeeNo.ToString();
-        user.MobileNo = model.EMPEmployee.MobileNo;
-        user.PassWord = _security.HashPassword(model.EMPEmployee.NationalCode);
+        AdminUser user = new AdminUser() { EMPEmployee = model };
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
+        user.UserName = model.EmpoloyeeNo.ToString();
+        user.MobileNo = model.MobileNo;
+        user.PassWord = _security.HashPassword(model.NationalCode);
         user.Status = (short)BaseStatus.Deactive;
         user.CreateDateTime = DateTime.Now;
         user.VerificationCode = "";
@@ -68,22 +68,44 @@ public class EmployeesService : IEmployeesService
 
         _uw.SaveChanges();
 
-        return model.EMPEmployee;
+        return model;
     }
 
 
-    public async Task<EMPEmployee> UpdateEmployeeAsync(EMPEmployee model)
+    public async Task<EMPEmployee> UpdateEmployeeAsync(EMPEmployee model, IFormFile File)
     {
  
-        AdminUser user = await _uw.GetRepository<AdminUser>().GetAllAsync().Result.Include(x => x.EMPEmployee).Where(x => x.EMPEmployee.Id == model.Id).FirstOrDefaultAsync();
- 
-        model.Status = (short)BaseStatus.Deactive;
-        model.CreateDateTime = DateTime.Now;
+        AdminUser user = await _uw.GetRepository<AdminUser>().GetAll().Include(x => x.EMPEmployee)
+            .Where(x => x.EMPEmployee.Id == model.Id && x.Status != (short)BaseStatus.Deleted && x.EMPEmployee.Status != (short)BaseStatus.Deleted).FirstOrDefaultAsync();
+
+        if (user == null)
+            throw new ValidationException(ErrorList.NotFound, "پرسنل مورد نظر یافت نشد.");
+
+        if (File.Length <= 0) throw new ValidationException(ErrorList.NotFoundFile, "عکس پرسنلی انتخاب نشده است.");
+
+
+        if (!VALID_FILE_TYPES.Contains(File.ContentType.ToLower()))
+            throw new ValidationException(ErrorList.FileFormat, "فرمت عکس مجاز نمی باشد.");
+   
+        var folderName = Path.Combine("Resources", "Employee");
+        var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        var fileName = "EmployeePic_" + model.EmpoloyeeNo + Path.GetExtension(File.FileName);
+        var fullPath = Path.Combine(pathToSave, fileName);
+
+        using (var stream = new FileStream(fullPath, FileMode.Create))
+        {
+            File.CopyTo(stream);
+        }
+
+        model.ImaghePath = fullPath;
+
+        model.UpdateDateTime = DateTime.Now;
 
         user.FirstName = model.FirstName;
-        user.LastName = model.LastName;
-        model.Status = (short)BaseStatus.Deactive;
-        user.CreateDateTime = DateTime.Now;
+        user.LastName = model.LastName;   
+        user.MobileNo = model.MobileNo;
+        user.PassWord = _security.HashPassword(model.NationalCode);
+        user.UpdateDateTime = DateTime.Now;
 
         _uw.GetRepository<EMPEmployee>().Update(model);
         _uw.GetRepository<AdminUser>().Update(user);
@@ -95,15 +117,48 @@ public class EmployeesService : IEmployeesService
 
     public async Task<EMPEmployee> DeleteEmployeeAsync(int Id)
     {
-        EMPEmployee model = await _uw.GetRepository<EMPEmployee>().GetByIdAsync(Id);
-        AdminUser user = await _uw.GetRepository<AdminUser>().GetAllAsync().Result.Include(x => x.EMPEmployee).Where(x => x.EMPEmployee.Id == model.Id).FirstOrDefaultAsync();
-                                          
-         _uw.GetRepository<EMPEmployee>().Delete(model);
-         _uw.GetRepository<AdminUser>().Delete(user);
+     
+        AdminUser userModel = await _uw.GetRepository<AdminUser>().GetAll().Include(x => x.EMPEmployee)
+            .Where(x => x.EMPEmployee.Id == Id && x.Status != (short)BaseStatus.Deleted && x.EMPEmployee.Status != (short)BaseStatus.Deleted).FirstOrDefaultAsync();
+
+        if (userModel == null)
+            throw new ValidationException(ErrorList.NotFound, "پرسنل مورد نظر یافت نشد.");
+
+        userModel.EMPEmployee.UpdateDateTime = DateTime.Now;
+        userModel.EMPEmployee.Status = (short)BaseStatus.Deleted;
+                               
+        userModel.UpdateDateTime = DateTime.Now;
+        userModel.Status = (short)BaseStatus.Deleted;
+
+        _uw.GetRepository<EMPEmployee>().Update(userModel.EMPEmployee);
+        _uw.GetRepository<AdminUser>().Update(userModel);
 
         _uw.SaveChanges();
 
-        return model;
+        return userModel.EMPEmployee;
+    }
+
+    public async Task<EMPEmployee> ConfirmEmployeeAsync(int Id)
+    {
+
+        AdminUser userModel = await _uw.GetRepository<AdminUser>().GetAll().Include(x => x.EMPEmployee)
+            .Where(x => x.EMPEmployee.Id == Id && x.Status != (short)BaseStatus.Deleted && x.EMPEmployee.Status != (short)BaseStatus.Deleted).FirstOrDefaultAsync();
+
+        if (userModel == null)
+            throw new ValidationException(ErrorList.NotFound, "پرسنل مورد نظر یافت نشد.");
+
+        userModel.EMPEmployee.UpdateDateTime = DateTime.Now;
+        userModel.EMPEmployee.Status = (short)BaseStatus.Active;
+
+        userModel.UpdateDateTime = DateTime.Now;
+        userModel.Status = (short)BaseStatus.Active;
+
+        _uw.GetRepository<EMPEmployee>().Update(userModel.EMPEmployee);
+        _uw.GetRepository<AdminUser>().Update(userModel);
+
+        _uw.SaveChanges();
+
+        return userModel.EMPEmployee;
     }
 
 }

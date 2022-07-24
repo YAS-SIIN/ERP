@@ -65,7 +65,7 @@ public class CrudService <T> : ICrudService<T> where T : class
         _uw.SaveChanges();
         return ObjVisit;
     }
-
+                
     public T Delete(T ObjVisit)
     {
 

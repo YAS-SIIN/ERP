@@ -10,21 +10,25 @@ public class EMPEmployee : BaseEntity<int>
 {
 
     [Required]
+    [MinLength(3)]
     [StringLength(100)]
     public string? FirstName { get; set; }
 
     [Required]
+    [MinLength(3)]
     [StringLength(100)]
     public string LastName { get; set; }
     
     [Required]            
     public int EmpoloyeeNo { get; set; }
              
-    [Required]
+    [Required]      
+    [MinLength(3)]
     [StringLength(50)]
     public string FatherName { get; set; }
 
     [Required]
+    [MinLength(10)]
     [StringLength(10)]
     public string NationalCode { get; set; }
 
@@ -33,6 +37,7 @@ public class EMPEmployee : BaseEntity<int>
     public string IdentifyNo { get; set; }
                               
     [Required]
+    [MinLength(10)]
     [StringLength(10)]
     public string DateOfBirth { get; set; }
 
@@ -40,14 +45,17 @@ public class EMPEmployee : BaseEntity<int>
     public short Gender { get; set; }
 
     [Required]
+    [MinLength(10)]
     [StringLength(10)]
     public string HireDate { get; set; }
 
     [Required]
+    [MinLength(10)]
     [StringLength(10)]
     public string LeaveDate { get; set; }
 
     [Required]
+    [MinLength(11)]
     [StringLength(11)]
     public string MobileNo { get; set; }
 

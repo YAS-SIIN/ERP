@@ -64,31 +64,26 @@ public class AccountService : IAccountService
         if (string.IsNullOrEmpty(token.Trim()))
             throw new ValidationException(ErrorList.NotFound, "Token is required.");
 
-        var session = await _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.Status == (short)SessionStatus.Login).
+     
+var session = _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.Status == (short)SessionStatus.Login).
             Include(a=>a.AdminUser).
-            ThenInclude(b=>b.AdminUserRole).
-            ThenInclude(c => c.AdminRole).ToListAsync();
-                                                          
-
+            ThenInclude(b=>b.AdminUserRole.Where(x=>x.AdminRole.RoleName == role)).
+            ThenInclude(c => c.AdminRole).ToList();
+                                                       
 
         if (session == null)
-            throw new ValidationException(ErrorList.NotFound, "Session not found.");
-        
-        return await _uw.GetRepository<Session>().ExistDataAsync(x => x.Token == token && x.Status == (short)SessionStatus.Login);
+            return false;
+
+        return true;
 
     }
 
     public async Task<LoginModel> LoginAsync(UserLoginDto userLogin)
     {
-        if (string.IsNullOrEmpty(userLogin.UserName.Trim()))
-            throw new ValidationException(ErrorList.NotFound, "Username is required.");
-
-        if (string.IsNullOrEmpty(userLogin.PassWord))
-            throw new ValidationException(ErrorList.NotFound, "Password is required.");
 
         var account =await _uw.GetRepository<AdminUser>().GetAsync(x => x.UserName.ToLower() == userLogin.UserName.Trim().ToLower());
         if (account == null)
-            throw new ValidationException(ErrorList.NotFound, "Account not found.");
+            throw new ValidationException(ErrorList.NotFound, "کاربر مورد نظر یافت نشد.");
 
         //if (!_security.VerifyHashedPassword(account.PassWord, userLogin.PassWord))
         //    throw new ValidationException(ErrorList.NotFound, "Username or password is not valid.");

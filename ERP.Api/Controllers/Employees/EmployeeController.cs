@@ -25,7 +25,7 @@ public class EmployeeController : ApiControllerBase
     }
 
     [HttpPost, Route("[action]")]
-    [Authorize]
+    [Authorize(Role = "Employee")]
     public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> GetAsync([FromBody] EMPEmployee model)
     {
         var result = await _crudService.GetAllAsync();
@@ -34,42 +34,55 @@ public class EmployeeController : ApiControllerBase
     }
 
     [HttpPost]
-    [Authorize(Role = "Test")]
-    public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> PostAsync([FromBody] EmplopyeeInDto model)
+    [Authorize(Role = "Employee")]
+    public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> PostAsync()
     {
+        var file = Request.Form.Files[0];
+        EMPEmployee employeeModel = Newtonsoft.Json.JsonConvert.DeserializeObject<EMPEmployee>(Request.Form.ToList()[0].Value);
         if (!ModelState.IsValid)
         {
             //ModelState.AddModelError("", "This record already exists."); // a cross field validation
             return BadRequest(ModelState);
         }
-        if (model.UploadFile.File.Length <= 0)
+        if (file.Length <= 0)
         {
             ModelState.AddModelError("", "The Employee Picture Not found."); // a cross field validation
             return BadRequest(ModelState);
         }
 
-            var result = await _employeesService.InsertEmployeeAsync(model);
+            var result = await _employeesService.InsertEmployeeAsync(employeeModel, file);
 
         return OkData(result);
     }
 
     [HttpPut]
-    [Authorize]
-    public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> PutAsync([FromBody] EMPEmployee model)
+    [Authorize(Role = "Employee")]
+    public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> PutAsync([FromBody] EmplopyeeInDto model)
     {
+        EMPEmployee employeeModel = Newtonsoft.Json.JsonConvert.DeserializeObject<EMPEmployee>(model.EMPEmployee);
         if (!ModelState.IsValid)
         {
             //ModelState.AddModelError("", "This record already exists."); // a cross field validation
             return BadRequest(ModelState);
         }
 
-        var result = await _employeesService.UpdateEmployeeAsync(model);
+        var result = await _employeesService.UpdateEmployeeAsync(employeeModel, model.File);
+
+        return OkData(result);
+    }
+
+    [HttpPut, Route("[action]")]
+    [Authorize(Role = "Employee")]
+    public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> ConfirmAsync([FromBody] int Id)
+    {
+     
+        var result = await _employeesService.ConfirmEmployeeAsync(Id);
 
         return OkData(result);
     }
 
     [HttpDelete]
-    [Authorize]
+    [Authorize(Role = "Employee")]
     public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> DeleteAsync([FromBody] int Id)
     {
         var result = await _employeesService.DeleteEmployeeAsync(Id);

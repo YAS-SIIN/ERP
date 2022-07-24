@@ -15,8 +15,6 @@ namespace ERP.Models.Other
 
         public DateTime ExpirationDate { get; set; }         
 
-        public bool IsValid { get; set; }
-
         public virtual AdminUser? AdminUser { get; set; }
     }
 }

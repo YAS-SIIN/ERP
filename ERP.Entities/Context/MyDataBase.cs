@@ -51,6 +51,9 @@ public class MyDataBase : DbContext
 
         modelBuilder.Entity<EMPEmployee>().HasIndex(b => b.IdentifyNo).IsUnique();
 
+        modelBuilder.Entity<AdminRole>().HasIndex(b => b.RoleName).IsUnique();
+                                                        
+        modelBuilder.Entity<Session>().HasOne(p => p.AdminUser).WithMany();
 
         //modelBuilder.Entity<Session>()
         //    .HasOne(e => e.AdminUser);

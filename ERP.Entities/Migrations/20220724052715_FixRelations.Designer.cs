@@ -4,6 +4,7 @@ using ERP.Entities.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Entities.Migrations
 {
     [DbContext(typeof(MyDataBase))]
-    partial class MyDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20220724052715_FixRelations")]
+    partial class FixRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,9 +87,6 @@ namespace ERP.Entities.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleName")
-                        .IsUnique();
 
                     b.ToTable("AdminRoles");
                 });
@@ -225,6 +224,12 @@ namespace ERP.Entities.Migrations
                     b.Property<double>("Id")
                         .HasColumnType("float");
 
+                    b.Property<int?>("AdminFormId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AdminRoleId")
+                        .HasColumnType("int");
+
                     b.Property<short>("ConfirmType")
                         .HasColumnType("smallint");
 
@@ -262,6 +267,10 @@ namespace ERP.Entities.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AdminFormId");
+
+                    b.HasIndex("AdminRoleId");
+
                     b.HasIndex("EMPEmployeeId");
 
                     b.ToTable("CARCartables");
@@ -271,9 +280,6 @@ namespace ERP.Entities.Migrations
                 {
                     b.Property<double>("Id")
                         .HasColumnType("float");
-
-                    b.Property<int?>("AdminRoleId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("CARTableId")
                         .HasColumnType("int");
@@ -305,8 +311,6 @@ namespace ERP.Entities.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AdminRoleId");
 
                     b.HasIndex("CARTableId");
 
@@ -531,6 +535,9 @@ namespace ERP.Entities.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsValid")
+                        .HasColumnType("bit");
+
                     b.Property<string>("SessionUser")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -589,24 +596,28 @@ namespace ERP.Entities.Migrations
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartable", b =>
                 {
+                    b.HasOne("ERP.Models.Admin.AdminForm", "AdminForm")
+                        .WithMany()
+                        .HasForeignKey("AdminFormId");
+
+                    b.HasOne("ERP.Models.Admin.AdminRole", null)
+                        .WithMany("CARCartable")
+                        .HasForeignKey("AdminRoleId");
+
                     b.HasOne("ERP.Models.Employees.EMPEmployee", "EMPEmployee")
                         .WithMany("CARCartable")
                         .HasForeignKey("EMPEmployeeId");
+
+                    b.Navigation("AdminForm");
 
                     b.Navigation("EMPEmployee");
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartableTrace", b =>
                 {
-                    b.HasOne("ERP.Models.Admin.AdminRole", "AdminRole")
-                        .WithMany("CARCartableTrace")
-                        .HasForeignKey("AdminRoleId");
-
                     b.HasOne("ERP.Models.Cartables.CARTable", "CARTable")
                         .WithMany("CARCartableTrace")
                         .HasForeignKey("CARTableId");
-
-                    b.Navigation("AdminRole");
 
                     b.Navigation("CARTable");
                 });
@@ -647,7 +658,7 @@ namespace ERP.Entities.Migrations
                 {
                     b.Navigation("AdminUserRole");
 
-                    b.Navigation("CARCartableTrace");
+                    b.Navigation("CARCartable");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminSubSystem", b =>

@@ -1,4 +1,6 @@
-﻿ 
+﻿
+using ERP.Models.Employees;
+
 using System.ComponentModel.DataAnnotations;
  
 
@@ -41,4 +43,5 @@ public class InOutRequestLeave : BaseEntity<int>
     [StringLength(250)]
     public string LeaveReason { get; set; }
 
+    public virtual EMPEmployee? EMPEmployee { get; set; }
 }

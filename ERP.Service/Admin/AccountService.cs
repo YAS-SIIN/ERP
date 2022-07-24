@@ -39,7 +39,7 @@ public class AccountService : IAccountService
 
     public async Task<AdminUser> GetAccountByToken(string token)
     {
-       var session = _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.IsValid).Include(e => e.AdminUser).FirstOrDefault();
+       var session = _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.Status == (short)SessionStatus.Login).Include(e => e.AdminUser).FirstOrDefault();
         //var session = sessionLst.Where(x => x.Token == token && x.IsValid).FirstOrDefault();
         if (session == null)
             throw new ValidationException(ErrorList.NotFound, "Token is invalid.");
@@ -56,7 +56,7 @@ public class AccountService : IAccountService
         if (string.IsNullOrEmpty(token.Trim()))
             throw new ValidationException(ErrorList.NotFound, "Token is required.");
 
-        return await _uw.GetRepository<Session>().ExistDataAsync(x => x.Token == token && x.IsValid);
+        return await _uw.GetRepository<Session>().ExistDataAsync(x => x.Token == token && x.Status == (short)SessionStatus.Login);
     }
 
     public async Task<bool> IsAuthenticatedRole(string token, string role)
@@ -64,14 +64,17 @@ public class AccountService : IAccountService
         if (string.IsNullOrEmpty(token.Trim()))
             throw new ValidationException(ErrorList.NotFound, "Token is required.");
 
-        var session = await _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.IsValid).Include(x=>x.AdminUser).ToListAsync();
+        var session = await _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.Status == (short)SessionStatus.Login).
+            Include(a=>a.AdminUser).
+            ThenInclude(b=>b.AdminUserRole).
+            ThenInclude(c => c.AdminRole).ToListAsync();
+                                                          
 
-        //var aa = await _uw.GetRepository<AdminRole>().GetAll().Include(x => x.AdminUserRole).Where(a=>a.RoleName == role && a.AdminUserRole).ToListAsync();
 
         if (session == null)
             throw new ValidationException(ErrorList.NotFound, "Session not found.");
         
-        return await _uw.GetRepository<Session>().ExistDataAsync(x => x.Token == token && x.IsValid);
+        return await _uw.GetRepository<Session>().ExistDataAsync(x => x.Token == token && x.Status == (short)SessionStatus.Login);
 
     }
 
@@ -103,8 +106,7 @@ public class AccountService : IAccountService
             UpdateDateTime = DateTime.Now,
             Status = (short)SessionStatus.Login,
             AdminUser = account,
-            ExpirationDate = expirationDate,
-            IsValid = true,
+            ExpirationDate = expirationDate,          
             Token = token
         };
 
@@ -123,12 +125,11 @@ public class AccountService : IAccountService
         if (string.IsNullOrEmpty(token.Trim()))
             throw new ValidationException(ErrorList.NotFound, "Token is required.");
 
-        var session =await _uw.GetRepository<Session>().GetAsync(x => x.Token == token && x.IsValid);
+        var session =await _uw.GetRepository<Session>().GetAsync(x => x.Token == token && x.Status == (short)SessionStatus.Login);
   
         if (session == null)
             throw new ValidationException(ErrorList.NotFound, "Session not found.");
-
-        session.IsValid = false;
+                                   
         session.Status = (short)SessionStatus.Logout;
         session.UpdateDateTime = DateTime.Now;
 

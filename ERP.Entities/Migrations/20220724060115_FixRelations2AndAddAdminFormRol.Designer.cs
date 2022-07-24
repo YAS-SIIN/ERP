@@ -4,6 +4,7 @@ using ERP.Entities.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Entities.Migrations
 {
     [DbContext(typeof(MyDataBase))]
-    partial class MyDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20220724060115_FixRelations2AndAddAdminFormRol")]
+    partial class FixRelations2AndAddAdminFormRol
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,6 +60,42 @@ namespace ERP.Entities.Migrations
                     b.ToTable("AdminForms");
                 });
 
+            modelBuilder.Entity("ERP.Models.Admin.AdminFormRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("AdminFormId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AdminRoleId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<short>("Status")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminFormId");
+
+                    b.HasIndex("AdminRoleId");
+
+                    b.ToTable("AdminFormRole");
+                });
+
             modelBuilder.Entity("ERP.Models.Admin.AdminRole", b =>
                 {
                     b.Property<int>("Id")
@@ -85,9 +123,6 @@ namespace ERP.Entities.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleName")
-                        .IsUnique();
 
                     b.ToTable("AdminRoles");
                 });
@@ -272,7 +307,7 @@ namespace ERP.Entities.Migrations
                     b.Property<double>("Id")
                         .HasColumnType("float");
 
-                    b.Property<int?>("AdminRoleId")
+                    b.Property<int?>("AdminFormRoleId")
                         .HasColumnType("int");
 
                     b.Property<int?>("CARTableId")
@@ -306,7 +341,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminRoleId");
+                    b.HasIndex("AdminFormRoleId");
 
                     b.HasIndex("CARTableId");
 
@@ -531,6 +566,9 @@ namespace ERP.Entities.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsValid")
+                        .HasColumnType("bit");
+
                     b.Property<string>("SessionUser")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -561,6 +599,21 @@ namespace ERP.Entities.Migrations
                         .HasForeignKey("AdminSubSystemId");
 
                     b.Navigation("AdminSubSystem");
+                });
+
+            modelBuilder.Entity("ERP.Models.Admin.AdminFormRole", b =>
+                {
+                    b.HasOne("ERP.Models.Admin.AdminForm", "AdminForm")
+                        .WithMany("AdminFormRole")
+                        .HasForeignKey("AdminFormId");
+
+                    b.HasOne("ERP.Models.Admin.AdminRole", "AdminRole")
+                        .WithMany("AdminFormRole")
+                        .HasForeignKey("AdminRoleId");
+
+                    b.Navigation("AdminForm");
+
+                    b.Navigation("AdminRole");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminUser", b =>
@@ -598,15 +651,15 @@ namespace ERP.Entities.Migrations
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartableTrace", b =>
                 {
-                    b.HasOne("ERP.Models.Admin.AdminRole", "AdminRole")
+                    b.HasOne("ERP.Models.Admin.AdminFormRole", "AdminFormRole")
                         .WithMany("CARCartableTrace")
-                        .HasForeignKey("AdminRoleId");
+                        .HasForeignKey("AdminFormRoleId");
 
                     b.HasOne("ERP.Models.Cartables.CARTable", "CARTable")
                         .WithMany("CARCartableTrace")
                         .HasForeignKey("CARTableId");
 
-                    b.Navigation("AdminRole");
+                    b.Navigation("AdminFormRole");
 
                     b.Navigation("CARTable");
                 });
@@ -640,14 +693,21 @@ namespace ERP.Entities.Migrations
 
             modelBuilder.Entity("ERP.Models.Admin.AdminForm", b =>
                 {
+                    b.Navigation("AdminFormRole");
+
                     b.Navigation("CARTable");
+                });
+
+            modelBuilder.Entity("ERP.Models.Admin.AdminFormRole", b =>
+                {
+                    b.Navigation("CARCartableTrace");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminRole", b =>
                 {
-                    b.Navigation("AdminUserRole");
+                    b.Navigation("AdminFormRole");
 
-                    b.Navigation("CARCartableTrace");
+                    b.Navigation("AdminUserRole");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminSubSystem", b =>

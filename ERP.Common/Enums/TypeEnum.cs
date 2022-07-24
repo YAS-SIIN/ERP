@@ -24,7 +24,7 @@ public class TypeEnum
         Deactive = 0,
 
         [Display(Name = "Active")]
-        Active = 2,
+        Active = 1,
 
         [Display(Name = "Deleted")]
         Deleted = 3

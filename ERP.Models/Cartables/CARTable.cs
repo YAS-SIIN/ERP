@@ -1,4 +1,6 @@
-﻿ 
+﻿
+using ERP.Models.Admin;
+
 using System.ComponentModel.DataAnnotations;
  
 
@@ -11,5 +13,5 @@ public class CARTable : BaseEntity<int>
     public string TableName { get; set; }
                                                         
     public virtual ICollection<CARCartableTrace>? CARCartableTrace { get; set; }
-
+    public virtual AdminForm? AdminForm { get; set; }
 }

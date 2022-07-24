@@ -1,4 +1,6 @@
-﻿ 
+﻿
+using ERP.Models.Admin;
+
 using System.ComponentModel.DataAnnotations;
  
 
@@ -17,6 +19,7 @@ public class CARCartableTrace : BaseEntity<double>
     [Required]
     [StringLength(10)]
     public string SignName { get; set; }
-   
 
+    public virtual CARTable? CARTable { get; set; }
+    public virtual AdminRole? AdminRole { get; set; }
 }

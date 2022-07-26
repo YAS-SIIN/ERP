@@ -4,6 +4,5 @@ namespace ERP.Dtos.Other;
 
 public class UploadInputModel
 {
-    public IFormFile File { get; set; } = null!;
-                                                       
+    public IFormFile? File { get; set; } = null;
 }

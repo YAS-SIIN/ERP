@@ -1,10 +1,10 @@
 ﻿ 
-using ERP.Dtos.Employees;     
+    
 using ERP.Models.Employees;
 
 using Microsoft.AspNetCore.Http;
 
-namespace ERP.Service.Admin;
+namespace ERP.Service.Employees;
 
 public interface IEmployeesService
 {

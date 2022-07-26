@@ -4,6 +4,7 @@ using ERP.Entities.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Entities.Migrations
 {
     [DbContext(typeof(MyDataBase))]
-    partial class MyDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20220725072014_ChangeDetails")]
+    partial class ChangeDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -422,50 +424,6 @@ namespace ERP.Entities.Migrations
                     b.ToTable("InOutRequestLeaves");
                 });
 
-            modelBuilder.Entity("ERP.Models.Cartables.ServRequestService", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreateDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int?>("EMPEmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RequestDate")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<short>("RequestServiceType")
-                        .HasColumnType("smallint");
-
-                    b.Property<string>("ServicesOrGoods")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<short>("Status")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("UpdateDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EMPEmployeeId");
-
-                    b.ToTable("ServRequestServices");
-                });
-
             modelBuilder.Entity("ERP.Models.Employees.EMPEmployee", b =>
                 {
                     b.Property<int>("Id")
@@ -673,15 +631,6 @@ namespace ERP.Entities.Migrations
                     b.Navigation("EMPEmployee");
                 });
 
-            modelBuilder.Entity("ERP.Models.Cartables.ServRequestService", b =>
-                {
-                    b.HasOne("ERP.Models.Employees.EMPEmployee", "EMPEmployee")
-                        .WithMany("ServRequestService")
-                        .HasForeignKey("EMPEmployeeId");
-
-                    b.Navigation("EMPEmployee");
-                });
-
             modelBuilder.Entity("ERP.Models.Other.Session", b =>
                 {
                     b.HasOne("ERP.Models.Admin.AdminUser", "AdminUser")
@@ -723,8 +672,6 @@ namespace ERP.Entities.Migrations
                     b.Navigation("CARCartable");
 
                     b.Navigation("InOutRequestLeave");
-
-                    b.Navigation("ServRequestService");
                 });
 #pragma warning restore 612, 618
         }

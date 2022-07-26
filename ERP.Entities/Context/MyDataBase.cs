@@ -3,7 +3,9 @@
 using ERP.Models.Admin;
 using ERP.Models.Cartables;
 using ERP.Models.Employees;
+using ERP.Models.InOut;
 using ERP.Models.Other;
+using ERP.Models.Services;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +41,10 @@ public class MyDataBase : DbContext
     public DbSet<InOutRequestLeave> InOutRequestLeaves { get; set; }
     #endregion
 
+    #region Serv
+    public DbSet<ServRequestService> ServRequestServices { get; set; }
+    #endregion
+
     #region Other
     public DbSet<Session> Sessions { get; set; }
     #endregion
@@ -49,7 +55,7 @@ public class MyDataBase : DbContext
 
         modelBuilder.Entity<EMPEmployee>().HasIndex(b => b.EmpoloyeeNo).IsUnique();
 
-        modelBuilder.Entity<EMPEmployee>().HasIndex(b => b.IdentifyNo).IsUnique();
+        modelBuilder.Entity<EMPEmployee>().HasIndex(b => b.NationalCode).IsUnique();
 
         modelBuilder.Entity<AdminRole>().HasIndex(b => b.RoleName).IsUnique();
                                                         

@@ -25,7 +25,6 @@
     <ProjectReference Include="..\ERP.Common\ERP.Common.csproj" />
     <ProjectReference Include="..\ERP.Dtos\ERP.Dtos.csproj" />
     <ProjectReference Include="..\ERP.Entities\ERP.Entities.csproj" />
-    <ProjectReference Include="..\ERP.Framework\ERP.Framework.csproj" />
   </ItemGroup>
 
 </Project>

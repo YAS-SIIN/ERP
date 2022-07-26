@@ -1,6 +1,8 @@
-﻿ 
+﻿
 using ERP.Models.Cartables;
- 
+using ERP.Models.InOut;
+using ERP.Models.Services;
+
 using System.ComponentModel.DataAnnotations;
  
 
@@ -18,11 +20,11 @@ public class EMPEmployee : BaseEntity<int>
     [MinLength(3)]
     [StringLength(100)]
     public string LastName { get; set; }
-    
-    [Required]            
-    public int EmpoloyeeNo { get; set; }
+
+    [Required]
+    public int EmpoloyeeNo { get; set; } = 0;
              
-    [Required]      
+    [Required]
     [MinLength(3)]
     [StringLength(50)]
     public string FatherName { get; set; }
@@ -30,6 +32,7 @@ public class EMPEmployee : BaseEntity<int>
     [Required]
     [MinLength(10)]
     [StringLength(10)]
+    [RegularExpression(@"^[0-9]{10}$")]
     public string NationalCode { get; set; }
 
     [Required]
@@ -37,7 +40,7 @@ public class EMPEmployee : BaseEntity<int>
     public string IdentifyNo { get; set; }
                               
     [Required]
-    [MinLength(10)]
+    [RegularExpression(@"^[1-4]\d{3}\/((0[1-6]\/((3[0-1])|([1-2][0-9])|(0[1-9])))|((1[0-2]|(0[7-9]))\/(30|31|([1-2][0-9])|(0[1-9]))))$")]
     [StringLength(10)]
     public string DateOfBirth { get; set; }
 
@@ -46,23 +49,25 @@ public class EMPEmployee : BaseEntity<int>
 
     [Required]
     [MinLength(10)]
+    [RegularExpression(@"^[1-4]\d{3}\/((0[1-6]\/((3[0-1])|([1-2][0-9])|(0[1-9])))|((1[0-2]|(0[7-9]))\/(30|31|([1-2][0-9])|(0[1-9]))))$")]
     [StringLength(10)]
     public string HireDate { get; set; }
 
-    [Required]
-    [MinLength(10)]
+    [Required(AllowEmptyStrings = true)]
+    [RegularExpression(@"^[1-4]\d{3}\/((0[1-6]\/((3[0-1])|([1-2][0-9])|(0[1-9])))|((1[0-2]|(0[7-9]))\/(30|31|([1-2][0-9])|(0[1-9]))))$")]
     [StringLength(10)]
-    public string LeaveDate { get; set; }
+    public string LeaveDate { get; set; } = "";
 
     [Required]
     [MinLength(11)]
-    [StringLength(11)]
+    [StringLength(11)]       
+    [RegularExpression(@"^[0-9]{3}[0-9]{3}[0-9]{4}$")]        
     public string MobileNo { get; set; }
 
-    [Required]
     [StringLength(200)]
-    public string ImaghePath { get; set; }
+    public string ImaghePath { get; set; } = "";
                                                              
     public virtual ICollection<CARCartable>? CARCartable { get; set; }
     public virtual ICollection<InOutRequestLeave>? InOutRequestLeave { get; set; }
+    public virtual ICollection<ServRequestService>? ServRequestService { get; set; }
 }

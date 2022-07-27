@@ -20,7 +20,7 @@ public class EmployeesService : IEmployeesService
     private readonly ISecurity _security;
     private readonly IUnitOfWork _uw;
     private static readonly string[] VALID_FILE_TYPES = {   "image/bmp", "image/png", "image/jpeg" };
-    private readonly IHostingEnvironment _hostingEnvironment;
+ 
     public EmployeesService(IUnitOfWork uw, ISecurity security )
     {
         _security = security;
@@ -52,7 +52,7 @@ public class EmployeesService : IEmployeesService
         model.Status = (short)BaseStatus.Deactive;
         model.CreateDateTime = DateTime.Now;
         model.LeaveDate = "";
-    await _uw.GetRepository<EMPEmployee>().AddAsync(model);
+        await _uw.GetRepository<EMPEmployee>().AddAsync(model);
 
         AdminUser user = new AdminUser() { EMPEmployee = model };
         user.FirstName = model.FirstName;

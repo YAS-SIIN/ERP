@@ -11,6 +11,10 @@ public class AdminForm: BaseEntity<int>
     [StringLength(100)]
     public string FormName { get; set; }
 
+    [Required]
+    [StringLength(100)]
+    public string FormNameFarsi { get; set; }
+
     public virtual ICollection<CARTable>? CARTable { get; set; }              
 
     public virtual AdminSubSystem? AdminSubSystem { get; set; }

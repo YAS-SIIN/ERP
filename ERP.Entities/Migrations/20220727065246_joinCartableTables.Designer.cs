@@ -4,6 +4,7 @@ using ERP.Entities.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Entities.Migrations
 {
     [DbContext(typeof(MyDataBase))]
-    partial class MyDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20220727065246_joinCartableTables")]
+    partial class joinCartableTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,11 +43,6 @@ namespace ERP.Entities.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("FormName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("FormNameFarsi")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -116,11 +113,6 @@ namespace ERP.Entities.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<string>("SubSystemName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("SubSystemNameFarsi")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -322,7 +314,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("CARTableId");
 
-                    b.ToTable("CARCartableTraces");
+                    b.ToTable("CARCartableTrace");
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARTable", b =>
@@ -358,7 +350,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("AdminFormId");
 
-                    b.ToTable("CARTables");
+                    b.ToTable("CARTable");
                 });
 
             modelBuilder.Entity("ERP.Models.Employees.EMPEmployee", b =>

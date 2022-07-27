@@ -1,5 +1,5 @@
 ﻿
-using ERP.Models.Admin;
+using ERP.Models.Admin;  
 
 using System.ComponentModel.DataAnnotations;
  
@@ -9,8 +9,6 @@ namespace ERP.Models.Cartables;
 public class CARCartableTrace : BaseEntity<double>
 {
  
-    [Required]          
-    public int OrderNo { get; set; }
  
     [Required]
     [StringLength(10)]
@@ -22,4 +20,5 @@ public class CARCartableTrace : BaseEntity<double>
 
     public virtual CARTable? CARTable { get; set; }
     public virtual AdminRole? AdminRole { get; set; }
+    public virtual ICollection<CARCartable>? CARCartable { get; set; }
 }

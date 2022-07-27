@@ -11,6 +11,7 @@ public interface IAccountService
 {
     Task<AdminUser> GetAccountByToken(string token);
     Task<EMPEmployee> GetEmployeeByAccount(AdminUser user);
+    Task<EMPEmployee> GetEmployeeByToken(string token);
     Task<LoginModel> LoginAsync(UserLoginDto userLogin);
     Task LogoutAsync(string token);
     Task<bool> IsAuthenticated(string token);   

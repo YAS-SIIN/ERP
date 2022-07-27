@@ -20,6 +20,6 @@ public class RequestLeaveService : IRequestLeaveService
 
     public async Task<List<InOutRequestLeave>> GetUserAllAsync(EMPEmployee employee)
     {
-        return await _uw.GetRepository<InOutRequestLeave>().GetAll(x => x.Status != (short)BaseStatus.Deleted).Include(x=>x.EMPEmployee == employee).ToListAsync();
+        return await _uw.GetRepository<InOutRequestLeave>().GetAll(x => x.Status != (short)BaseStatus.Deleted && x.EMPEmployee.Id == employee.Id).Include(x=>x.EMPEmployee).ToListAsync();
     }  
 }

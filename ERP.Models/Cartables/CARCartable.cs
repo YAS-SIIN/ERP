@@ -14,10 +14,7 @@ public class CARCartable : BaseEntity<double>
 
     [Required]          
     public int OrderNo { get; set; } = 0;
-
-    [Required]
-    public bool DeleteFlag { get; set; }
-
+  
     [Required]
     public short ConfirmType { get; set; } = 0;
 
@@ -26,4 +23,5 @@ public class CARCartable : BaseEntity<double>
     public string SignDate { get; set; } = "";
                                         
     public virtual EMPEmployee? EMPEmployee { get; set; }
+    public virtual CARCartableTrace? CARCartableTrace { get; set; }
 }                                                        

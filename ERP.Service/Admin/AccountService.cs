@@ -50,12 +50,27 @@ public class AccountService : IAccountService
 
     public async Task<EMPEmployee> GetEmployeeByAccount(AdminUser user)
     {
-        var account = await _uw.GetRepository<AdminUser>().GetAll(x=> x.Status == (short)BaseStatus.Active && x.EMPEmployee.Status == (short)BaseStatus.Active).Include(e => e.EMPEmployee).FirstOrDefaultAsync();
+        var account = await _uw.GetRepository<AdminUser>().GetAll(x=> x.Status == (short)BaseStatus.Active && x.EMPEmployee.Status == (short)BaseStatus.Active && x.Id == user.Id).Include(e => e.EMPEmployee).FirstOrDefaultAsync();
         //var session = sessionLst.Where(x => x.Token == token && x.IsValid).FirstOrDefault();
         if (account == null)
             throw new ValidationException(ErrorList.NotFound, "Employee is not found.");
  
         return account.EMPEmployee;
+    }
+
+    public async Task<EMPEmployee> GetEmployeeByToken(string token)
+    {
+        var session = await _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.Status == (short)SessionStatus.Login && x.AdminUser.Status == (short)BaseStatus.Active).Include(e => e.AdminUser).FirstOrDefaultAsync();
+        //var session = sessionLst.Where(x => x.Token == token && x.IsValid).FirstOrDefault();
+        if (session == null)
+            throw new ValidationException(ErrorList.NotFound, "Token is invalid.");
+
+        var account = await _uw.GetRepository<AdminUser>().GetAll(x => x.Status == (short)BaseStatus.Active && x.EMPEmployee.Status == (short)BaseStatus.Active && x.Id == session.AdminUser.Id).Include(e => e.EMPEmployee).FirstOrDefaultAsync();
+        //var session = sessionLst.Where(x => x.Token == token && x.IsValid).FirstOrDefault();
+        if (account == null)
+            throw new ValidationException(ErrorList.NotFound, "Employee is not found.");
+
+        return account.EMPEmployee;                       
     }
 
     public async Task<bool> IsAuthenticated(string token)

@@ -10,5 +10,9 @@ public class AdminSubSystem : BaseEntity<int>
     [StringLength(100)]
     public string SubSystemName { get; set; }
 
+    [Required]
+    [StringLength(100)]
+    public string SubSystemNameFarsi { get; set; }
+
     public virtual ICollection<AdminForm>? AdminForm { get; set; }
 }

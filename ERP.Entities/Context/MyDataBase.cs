@@ -29,8 +29,8 @@ public class MyDataBase : DbContext
 
     #region Cartable
     public DbSet<CARCartable> CARCartables { get; set; }
-    public DbSet<CARCartableTrace> CARCartableTrace { get; set; }
-    public DbSet<CARTable> CARTable { get; set; }
+    public DbSet<CARCartableTrace> CARCartableTraces { get; set; }
+    public DbSet<CARTable> CARTables { get; set; }
     #endregion
 
     #region Employe

@@ -34,8 +34,7 @@ namespace ERP.Api.Controllers.InOut
         public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> GetAsync()
         {
             UserSessionModel session = (UserSessionModel)HttpContext.Items["UserSession"];
-            AdminUser user = await _accountService.GetAccountByToken(session.Token);
-            EMPEmployee employee = await _accountService.GetEmployeeByAccount(user);
+            EMPEmployee employee = await _accountService.GetEmployeeByToken(session.Token);     
 
             var result = await _requestLeaveService.GetUserAllAsync(employee);
 
@@ -46,6 +45,9 @@ namespace ERP.Api.Controllers.InOut
         [Authorize(Role = "RequestLeave")]
         public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> InsertAsync([FromForm] InOutRequestLeave model)
         {
+            UserSessionModel session = (UserSessionModel)HttpContext.Items["UserSession"];
+            EMPEmployee employee = await _accountService.GetEmployeeByToken(session.Token);
+            model.EMPEmployee = employee;
 
             if (!ModelState.IsValid)
             {

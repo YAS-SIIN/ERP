@@ -107,7 +107,7 @@ public class CrudService <T> : ICrudService<T> where T : class
     public Task<T> InsertAsync(T ObjVisit)
     {
         _uw.GetRepository<T>().AddAsync(ObjVisit);
-        _uw.SaveChangesAsync();
+        _uw.SaveChanges();
         return Task.FromResult(ObjVisit);
     }
 
@@ -122,7 +122,7 @@ public class CrudService <T> : ICrudService<T> where T : class
     {
 
         _uw.GetRepository<T>().Update(ObjVisit);
-        _uw.SaveChangesAsync();
+        _uw.SaveChanges();
         return Task.FromResult(ObjVisit);
     }
 
@@ -130,7 +130,7 @@ public class CrudService <T> : ICrudService<T> where T : class
     {
 
         _uw.GetRepository<T>().UpdateRange(ObjVisit);
-        _uw.SaveChangesAsync();
+        _uw.SaveChanges();
         return Task.FromResult(ObjVisit);
     }
 
@@ -138,7 +138,7 @@ public class CrudService <T> : ICrudService<T> where T : class
     {
 
         _uw.GetRepository<T>().Delete(ObjVisit);
-        _uw.SaveChangesAsync();
+        _uw.SaveChanges();
         return Task.FromResult(ObjVisit);
     }
 
@@ -146,7 +146,7 @@ public class CrudService <T> : ICrudService<T> where T : class
     {
 
         _uw.GetRepository<T>().DeleteRange(ObjVisit);
-        _uw.SaveChangesAsync();
+        _uw.SaveChanges();
         return Task.FromResult(ObjVisit);
     }
 

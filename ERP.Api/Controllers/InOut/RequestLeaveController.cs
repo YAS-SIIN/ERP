@@ -14,6 +14,7 @@ using ERP.Service.InOut;
 using Microsoft.AspNetCore.Mvc;
 
 using static ERP.Common.Enums.TypeEnum;
+using ERP.Dtos.InOut;
 
 namespace ERP.Api.Controllers.InOut
 {
@@ -33,13 +34,17 @@ namespace ERP.Api.Controllers.InOut
                             
         [HttpPost, Route("[action]")]
         [Authorize(Role = "RequestLeave")]
-        public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> GetAsync()
+        public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> GetAsync([FromBody] RequestLeaveFilterDto model)
         {
             UserSessionModel session = (UserSessionModel)HttpContext.Items["UserSession"];
             EMPEmployee employee = await _accountService.GetEmployeeByToken(session.Token);     
 
             var result = await _requestLeaveService.GetUserAllAsync(employee);
 
+            if (model.Year != 0 && model.Year != null)
+            {
+                result = result.Where(x => Convert.ToInt32(x.RequestDate.Substring(0, 4)) >= Convert.ToInt32(model.Year.ToString())).ToList();
+            }                                                          
             return OkData(result);
         }
 
@@ -79,14 +84,8 @@ namespace ERP.Api.Controllers.InOut
         public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> ConfirmAsync(int Id)
         {
      
-            InOutRequestLeave model = await _crudService.GetAsync(x=>x.Id == Id && x.Status == (short)BaseStatus.Deactive);
-            if (model == null)
-            {
-                throw new ValidationException(ErrorList.NotFound, "مرخصی مورد نظر یافت نشد."); 
-            }
-            model.Status = (short)BaseStatus.Active;
-            model.UpdateDateTime = DateTime.Now;
-            var result = await _crudService.UpdateAsync(model);
+       
+            var result = await _requestLeaveService.ConfirmRequestLeaveAsync(Id);
 
             return OkData(result);
         }

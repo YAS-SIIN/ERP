@@ -12,12 +12,12 @@ namespace ERP.Api.Controllers.Other
     {
 
         [HttpPost, Route("[action]")]          
-        public async Task<ActionResult<ApiResultViewModel<string>>> GetPersianDateAsync()
+        public string GetPersianDate()
         {
  
             var result = DateTime.Now.ToPersianDate();
 
-            return OkData(result);
+            return result;
         }
     }
 }

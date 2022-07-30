@@ -61,7 +61,7 @@ public class EMPEmployee : BaseEntity<int>
     [Required]
     [MinLength(11)]
     [StringLength(11)]       
-    [RegularExpression(@"^[0-9]{3}[0-9]{3}[0-9]{4}$")]        
+    [RegularExpression(@"^09\d{9}$")]        
     public string MobileNo { get; set; }
 
     [StringLength(200)]

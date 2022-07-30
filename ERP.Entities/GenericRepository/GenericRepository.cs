@@ -85,8 +85,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         _dbSet.RemoveRange(entity);
     }
-    //--------------
        
+    //--------------
+
     public async Task<bool> ExistDataAsync()
     {
         return await _dbSet.AnyAsync();

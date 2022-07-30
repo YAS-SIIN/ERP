@@ -3,7 +3,7 @@ using ERP.Common.Enums;
 using ERP.Dtos.Admin;
 using ERP.Dtos.Exceptions;
 using ERP.Framework.Exceptions;
-
+using ERP.Models.Employees;
 using ERP.Service.Admin;
 
 
@@ -55,6 +55,20 @@ public class AccountController : ApiControllerBase
         return OkData(isAuthenticated);
     }
 
+    [HttpPost, Route("[action]")]
+    [Authorize]
+    public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> GetAccountInfo(string token)
+    {
+        var Resualt = await _accountService.GetEmployeeByToken(token);
+                                 
+        EMPEmployee newModel = new EMPEmployee();
+        newModel.FirstName = Resualt.FirstName;
+        newModel.LastName = Resualt.LastName;
+        newModel.EmpoloyeeNo = Resualt.EmpoloyeeNo;    
+
+        return OkData(newModel);
+    }
+
 
     [HttpPost, Route("[action]")]
     public async Task ResetPasswordVerificationCodeAsync([FromBody] ResetPasswordVerificationCodeInputModel model)
@@ -66,6 +80,7 @@ public class AccountController : ApiControllerBase
     }
 
     [HttpPost, Route("[action]")]
+    [Authorize]
     public async Task ResetPassword([FromBody] ResetPasswordInputModel model)
     {
         if (UserSession != null && UserSession?.UserId != null)

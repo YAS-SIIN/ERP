@@ -4,7 +4,7 @@
 
 namespace ERP.Entities.Migrations
 {
-    public partial class ChangeTableNames : Migration
+    public partial class ChangeTableName : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,33 +17,16 @@ namespace ERP.Entities.Migrations
                 table: "CARCartableTrace");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_CARCartableTrace_CARTable_CARTableId",
+                name: "FK_CARCartableTrace_CARTables_CARTableId",
                 table: "CARCartableTrace");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_CARTable_AdminForms_AdminFormId",
-                table: "CARTable");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_CARTable",
-                table: "CARTable");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_CARCartableTrace",
                 table: "CARCartableTrace");
 
             migrationBuilder.RenameTable(
-                name: "CARTable",
-                newName: "CARTables");
-
-            migrationBuilder.RenameTable(
                 name: "CARCartableTrace",
                 newName: "CARCartableTraces");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_CARTable_AdminFormId",
-                table: "CARTables",
-                newName: "IX_CARTables_AdminFormId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_CARCartableTrace_CARTableId",
@@ -54,11 +37,6 @@ namespace ERP.Entities.Migrations
                 name: "IX_CARCartableTrace_AdminRoleId",
                 table: "CARCartableTraces",
                 newName: "IX_CARCartableTraces_AdminRoleId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_CARTables",
-                table: "CARTables",
-                column: "Id");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_CARCartableTraces",
@@ -85,13 +63,6 @@ namespace ERP.Entities.Migrations
                 column: "CARTableId",
                 principalTable: "CARTables",
                 principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_CARTables_AdminForms_AdminFormId",
-                table: "CARTables",
-                column: "AdminFormId",
-                principalTable: "AdminForms",
-                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -108,30 +79,13 @@ namespace ERP.Entities.Migrations
                 name: "FK_CARCartableTraces_CARTables_CARTableId",
                 table: "CARCartableTraces");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_CARTables_AdminForms_AdminFormId",
-                table: "CARTables");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_CARTables",
-                table: "CARTables");
-
             migrationBuilder.DropPrimaryKey(
                 name: "PK_CARCartableTraces",
                 table: "CARCartableTraces");
 
             migrationBuilder.RenameTable(
-                name: "CARTables",
-                newName: "CARTable");
-
-            migrationBuilder.RenameTable(
                 name: "CARCartableTraces",
                 newName: "CARCartableTrace");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_CARTables_AdminFormId",
-                table: "CARTable",
-                newName: "IX_CARTable_AdminFormId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_CARCartableTraces_CARTableId",
@@ -142,11 +96,6 @@ namespace ERP.Entities.Migrations
                 name: "IX_CARCartableTraces_AdminRoleId",
                 table: "CARCartableTrace",
                 newName: "IX_CARCartableTrace_AdminRoleId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_CARTable",
-                table: "CARTable",
-                column: "Id");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_CARCartableTrace",
@@ -168,17 +117,10 @@ namespace ERP.Entities.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_CARCartableTrace_CARTable_CARTableId",
+                name: "FK_CARCartableTrace_CARTables_CARTableId",
                 table: "CARCartableTrace",
                 column: "CARTableId",
-                principalTable: "CARTable",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_CARTable_AdminForms_AdminFormId",
-                table: "CARTable",
-                column: "AdminFormId",
-                principalTable: "AdminForms",
+                principalTable: "CARTables",
                 principalColumn: "Id");
         }
     }

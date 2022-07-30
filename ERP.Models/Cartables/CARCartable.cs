@@ -12,9 +12,10 @@ public class CARCartable : BaseEntity<double>
     [StringLength(20)]
     public string FieldCode { get; set; }
 
-    [Required]          
-    public int OrderNo { get; set; } = 0;
-  
+    [Required]
+    [StringLength(10)]
+    public string RequestDate { get; set; }
+
     [Required]
     public short ConfirmType { get; set; } = 0;
 

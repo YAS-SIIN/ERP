@@ -31,6 +31,12 @@ public class InOutRequestLeave : BaseEntity<int>
     public string ToDate { get; set; } = "";
 
     [Required]
+    [RegularExpression(@"^[1-4]\d{3}\/((0[1-6]\/((3[0-1])|([1-2][0-9])|(0[1-9])))|((1[0-2]|(0[7-9]))\/(30|31|([1-2][0-9])|(0[1-9]))))$")]
+    [MinLength(10)]
+    [StringLength(10)]
+    public string TimeLeaveDate { get; set; } = "";
+
+    [Required]
     [StringLength(8)]
     public string FromTime { get; set; } = "";
 

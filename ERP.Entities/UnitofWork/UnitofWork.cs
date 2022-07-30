@@ -1,6 +1,7 @@
 ﻿using ERP.Entities.Context;
 using ERP.Entities.GenericRepository;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 using System;
@@ -26,6 +27,11 @@ public class UnitOfWork : IUnitOfWork
     }
 
 
+    public object ExecuteSqlComman(string strQuery, params object[] parametrs)
+    {
+      return _context.Database.ExecuteSqlRaw(strQuery, parametrs);
+    }
+ 
     public void SaveChanges()
     {
         try

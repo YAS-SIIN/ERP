@@ -8,5 +8,5 @@ namespace ERP.Service.InOut;
 public interface IRequestLeaveService
 {
     Task<List<InOutRequestLeave>> GetUserAllAsync(EMPEmployee employee);
-
+    Task<InOutRequestLeave> ConfirmRequestLeaveAsync(int Id);
 }

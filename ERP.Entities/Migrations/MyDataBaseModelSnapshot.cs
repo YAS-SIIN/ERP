@@ -235,8 +235,8 @@ namespace ERP.Entities.Migrations
                     b.Property<double>("Id")
                         .HasColumnType("float");
 
-                    b.Property<double?>("CARCartableTraceId")
-                        .HasColumnType("float");
+                    b.Property<int?>("CARCartableTraceId")
+                        .HasColumnType("int");
 
                     b.Property<short>("ConfirmType")
                         .HasColumnType("smallint");
@@ -256,8 +256,10 @@ namespace ERP.Entities.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("OrderNo")
-                        .HasColumnType("int");
+                    b.Property<string>("RequestDate")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("SignDate")
                         .IsRequired()
@@ -281,8 +283,11 @@ namespace ERP.Entities.Migrations
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartableTrace", b =>
                 {
-                    b.Property<double>("Id")
-                        .HasColumnType("float");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int?>("AdminRoleId")
                         .HasColumnType("int");
@@ -300,15 +305,15 @@ namespace ERP.Entities.Migrations
                     b.Property<int>("OrderNo")
                         .HasColumnType("int");
 
-                    b.Property<string>("SignName")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
                     b.Property<string>("SignTitle")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SignTitleFa")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<short>("Status")
                         .HasColumnType("smallint");
@@ -501,6 +506,11 @@ namespace ERP.Entities.Migrations
 
                     b.Property<short>("Status")
                         .HasColumnType("smallint");
+
+                    b.Property<string>("TimeLeaveDate")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("ToDate")
                         .IsRequired()

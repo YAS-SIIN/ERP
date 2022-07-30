@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Entities.Migrations
 {
     [DbContext(typeof(MyDataBase))]
-    [Migration("20220720144001_ChangeInTables")]
-    partial class ChangeInTables
+    [Migration("20220730102637_InitMig1")]
+    partial class InitMig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,11 @@ namespace ERP.Entities.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("FormName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("FormNameFarsi")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -88,6 +93,9 @@ namespace ERP.Entities.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleName")
+                        .IsUnique();
+
                     b.ToTable("AdminRoles");
                 });
 
@@ -110,6 +118,11 @@ namespace ERP.Entities.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<string>("SubSystemName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SubSystemNameFarsi")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -224,7 +237,7 @@ namespace ERP.Entities.Migrations
                     b.Property<double>("Id")
                         .HasColumnType("float");
 
-                    b.Property<int?>("AdminRoleId")
+                    b.Property<int?>("CARCartableTraceId")
                         .HasColumnType("int");
 
                     b.Property<short>("ConfirmType")
@@ -232,9 +245,6 @@ namespace ERP.Entities.Migrations
 
                     b.Property<DateTime>("CreateDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("DeleteFlag")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Description")
                         .HasMaxLength(250)
@@ -248,8 +258,10 @@ namespace ERP.Entities.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("OrderNo")
-                        .HasColumnType("int");
+                    b.Property<string>("RequestDate")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("SignDate")
                         .IsRequired()
@@ -264,7 +276,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminRoleId");
+                    b.HasIndex("CARCartableTraceId");
 
                     b.HasIndex("EMPEmployeeId");
 
@@ -273,8 +285,14 @@ namespace ERP.Entities.Migrations
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartableTrace", b =>
                 {
-                    b.Property<double>("Id")
-                        .HasColumnType("float");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("AdminRoleId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("CARTableId")
                         .HasColumnType("int");
@@ -289,15 +307,15 @@ namespace ERP.Entities.Migrations
                     b.Property<int>("OrderNo")
                         .HasColumnType("int");
 
-                    b.Property<string>("SignName")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
                     b.Property<string>("SignTitle")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SignTitleFa")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<short>("Status")
                         .HasColumnType("smallint");
@@ -306,6 +324,8 @@ namespace ERP.Entities.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AdminRoleId");
 
                     b.HasIndex("CARTableId");
 
@@ -345,78 +365,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("AdminFormId");
 
-                    b.ToTable("CARTable");
-                });
-
-            modelBuilder.Entity("ERP.Models.Cartables.InOutRequestLeave", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreateDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int?>("EMPEmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FromDate")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<TimeSpan>("FromTime")
-                        .HasMaxLength(10)
-                        .HasColumnType("time");
-
-                    b.Property<int>("LeaveDay")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LeaveReason")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int>("LeaveTime")
-                        .HasColumnType("int");
-
-                    b.Property<short>("LeaveType")
-                        .HasColumnType("smallint");
-
-                    b.Property<string>("RequestDate")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<short>("RequestLeaveType")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("Status")
-                        .HasColumnType("smallint");
-
-                    b.Property<string>("ToDate")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<TimeSpan>("ToTime")
-                        .HasMaxLength(10)
-                        .HasColumnType("time");
-
-                    b.Property<DateTime>("UpdateDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EMPEmployeeId");
-
-                    b.ToTable("InOutRequestLeaves");
+                    b.ToTable("CARTables");
                 });
 
             modelBuilder.Entity("ERP.Models.Employees.EMPEmployee", b =>
@@ -501,10 +450,88 @@ namespace ERP.Entities.Migrations
                     b.HasIndex("EmpoloyeeNo")
                         .IsUnique();
 
-                    b.HasIndex("IdentifyNo")
+                    b.HasIndex("NationalCode")
                         .IsUnique();
 
                     b.ToTable("EMPEmployees");
+                });
+
+            modelBuilder.Entity("ERP.Models.InOut.InOutRequestLeave", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int?>("EMPEmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FromDate")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("FromTime")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<int>("LeaveDay")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LeaveReason")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int>("LeaveTime")
+                        .HasColumnType("int");
+
+                    b.Property<short>("LeaveType")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("RequestDate")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<short>("RequestLeaveType")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("Status")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("TimeLeaveDate")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("ToDate")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("ToTime")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EMPEmployeeId");
+
+                    b.ToTable("InOutRequestLeaves");
                 });
 
             modelBuilder.Entity("ERP.Models.Other.Session", b =>
@@ -515,7 +542,7 @@ namespace ERP.Entities.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AdminUserId")
+                    b.Property<int?>("AdminUserId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreateDateTime")
@@ -527,9 +554,6 @@ namespace ERP.Entities.Migrations
 
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsValid")
-                        .HasColumnType("bit");
 
                     b.Property<string>("SessionUser")
                         .IsRequired()
@@ -554,11 +578,57 @@ namespace ERP.Entities.Migrations
                     b.ToTable("Sessions");
                 });
 
+            modelBuilder.Entity("ERP.Models.Services.ServRequestService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int?>("EMPEmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RequestDate")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<short>("RequestServiceType")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("ServicesOrGoods")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<short>("Status")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EMPEmployeeId");
+
+                    b.ToTable("ServRequestServices");
+                });
+
             modelBuilder.Entity("ERP.Models.Admin.AdminForm", b =>
                 {
-                    b.HasOne("ERP.Models.Admin.AdminSubSystem", null)
+                    b.HasOne("ERP.Models.Admin.AdminSubSystem", "AdminSubSystem")
                         .WithMany("AdminForm")
                         .HasForeignKey("AdminSubSystemId");
+
+                    b.Navigation("AdminSubSystem");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminUser", b =>
@@ -572,56 +642,83 @@ namespace ERP.Entities.Migrations
 
             modelBuilder.Entity("ERP.Models.Admin.AdminUserRole", b =>
                 {
-                    b.HasOne("ERP.Models.Admin.AdminRole", null)
+                    b.HasOne("ERP.Models.Admin.AdminRole", "AdminRole")
                         .WithMany("AdminUserRole")
                         .HasForeignKey("AdminRoleId");
 
-                    b.HasOne("ERP.Models.Admin.AdminUser", null)
+                    b.HasOne("ERP.Models.Admin.AdminUser", "AdminUser")
                         .WithMany("AdminUserRole")
                         .HasForeignKey("AdminUserId");
+
+                    b.Navigation("AdminRole");
+
+                    b.Navigation("AdminUser");
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartable", b =>
                 {
-                    b.HasOne("ERP.Models.Admin.AdminRole", null)
+                    b.HasOne("ERP.Models.Cartables.CARCartableTrace", "CARCartableTrace")
                         .WithMany("CARCartable")
-                        .HasForeignKey("AdminRoleId");
+                        .HasForeignKey("CARCartableTraceId");
 
-                    b.HasOne("ERP.Models.Employees.EMPEmployee", null)
+                    b.HasOne("ERP.Models.Employees.EMPEmployee", "EMPEmployee")
                         .WithMany("CARCartable")
                         .HasForeignKey("EMPEmployeeId");
+
+                    b.Navigation("CARCartableTrace");
+
+                    b.Navigation("EMPEmployee");
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartableTrace", b =>
                 {
-                    b.HasOne("ERP.Models.Cartables.CARTable", null)
+                    b.HasOne("ERP.Models.Admin.AdminRole", "AdminRole")
+                        .WithMany("CARCartableTrace")
+                        .HasForeignKey("AdminRoleId");
+
+                    b.HasOne("ERP.Models.Cartables.CARTable", "CARTable")
                         .WithMany("CARCartableTrace")
                         .HasForeignKey("CARTableId");
+
+                    b.Navigation("AdminRole");
+
+                    b.Navigation("CARTable");
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARTable", b =>
                 {
-                    b.HasOne("ERP.Models.Admin.AdminForm", null)
+                    b.HasOne("ERP.Models.Admin.AdminForm", "AdminForm")
                         .WithMany("CARTable")
                         .HasForeignKey("AdminFormId");
+
+                    b.Navigation("AdminForm");
                 });
 
-            modelBuilder.Entity("ERP.Models.Cartables.InOutRequestLeave", b =>
+            modelBuilder.Entity("ERP.Models.InOut.InOutRequestLeave", b =>
                 {
-                    b.HasOne("ERP.Models.Employees.EMPEmployee", null)
+                    b.HasOne("ERP.Models.Employees.EMPEmployee", "EMPEmployee")
                         .WithMany("InOutRequestLeave")
                         .HasForeignKey("EMPEmployeeId");
+
+                    b.Navigation("EMPEmployee");
                 });
 
             modelBuilder.Entity("ERP.Models.Other.Session", b =>
                 {
                     b.HasOne("ERP.Models.Admin.AdminUser", "AdminUser")
                         .WithMany()
-                        .HasForeignKey("AdminUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AdminUserId");
 
                     b.Navigation("AdminUser");
+                });
+
+            modelBuilder.Entity("ERP.Models.Services.ServRequestService", b =>
+                {
+                    b.HasOne("ERP.Models.Employees.EMPEmployee", "EMPEmployee")
+                        .WithMany("ServRequestService")
+                        .HasForeignKey("EMPEmployeeId");
+
+                    b.Navigation("EMPEmployee");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminForm", b =>
@@ -633,7 +730,7 @@ namespace ERP.Entities.Migrations
                 {
                     b.Navigation("AdminUserRole");
 
-                    b.Navigation("CARCartable");
+                    b.Navigation("CARCartableTrace");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminSubSystem", b =>
@@ -646,6 +743,11 @@ namespace ERP.Entities.Migrations
                     b.Navigation("AdminUserRole");
                 });
 
+            modelBuilder.Entity("ERP.Models.Cartables.CARCartableTrace", b =>
+                {
+                    b.Navigation("CARCartable");
+                });
+
             modelBuilder.Entity("ERP.Models.Cartables.CARTable", b =>
                 {
                     b.Navigation("CARCartableTrace");
@@ -656,6 +758,8 @@ namespace ERP.Entities.Migrations
                     b.Navigation("CARCartable");
 
                     b.Navigation("InOutRequestLeave");
+
+                    b.Navigation("ServRequestService");
                 });
 #pragma warning restore 612, 618
         }

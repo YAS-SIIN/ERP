@@ -4,6 +4,7 @@ using ERP.Entities.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Entities.Migrations
 {
     [DbContext(typeof(MyDataBase))]
-    partial class MyDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20220731095331_RemoveSPIntResultTable")]
+    partial class RemoveSPIntResultTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -574,14 +576,6 @@ namespace ERP.Entities.Migrations
                     b.HasIndex("AdminUserId");
 
                     b.ToTable("Sessions");
-                });
-
-            modelBuilder.Entity("ERP.Models.Other.SPIntResult", b =>
-                {
-                    b.Property<int>("SpReturnResult")
-                        .HasColumnType("int");
-
-                    b.ToTable("SPIntResults");
                 });
 
             modelBuilder.Entity("ERP.Models.Services.ServRequestService", b =>

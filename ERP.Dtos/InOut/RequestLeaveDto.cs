@@ -1,9 +1,10 @@
-﻿ 
+﻿
+using ERP.Dtos.Cartables;
+
 namespace ERP.Dtos.InOut
 {
-    public class RequestLeaveFilterDto
-    {
-        public int? Year { get; set; }
+    public class RequestLeaveFilterDto   : CartableDto
+    {                             
     }
      
 }

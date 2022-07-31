@@ -44,7 +44,11 @@ namespace ERP.Api.Controllers.InOut
             if (model.Year != 0 && model.Year != null)
             {
                 result = result.Where(x => Convert.ToInt32(x.RequestDate.Substring(0, 4)) >= Convert.ToInt32(model.Year.ToString())).ToList();
-            }                                                          
+            }
+            if (model.Status != 2)
+            {
+                result = result.Where(x => x.Status == model.Status).ToList();
+            }
             return OkData(result);
         }
 
@@ -83,9 +87,10 @@ namespace ERP.Api.Controllers.InOut
         [Authorize(Role = "RequestLeave")]
         public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> ConfirmAsync(int Id)
         {
-     
-       
-            var result = await _requestLeaveService.ConfirmRequestLeaveAsync(Id);
+            UserSessionModel session = (UserSessionModel)HttpContext.Items["UserSession"];
+            EMPEmployee employee = await _accountService.GetEmployeeByToken(session.Token);
+
+            var result = await _requestLeaveService.ConfirmRequestLeaveAsync(Id, employee.Id);
 
             return OkData(result);
         }

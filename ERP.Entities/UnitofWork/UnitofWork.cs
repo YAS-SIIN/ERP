@@ -27,11 +27,16 @@ public class UnitOfWork : IUnitOfWork
     }
 
 
-    public object ExecuteSqlComman(string strQuery, params object[] parametrs)
+    public object ExecuteSqlRaw(string strQuery, object[] parametrs)
     {
-      return _context.Database.ExecuteSqlRaw(strQuery, parametrs);
+      return _context.Database.ExecuteSqlRaw(strQuery, parametrs.ToArray());
     }
- 
+
+    public async Task<object> ExecuteSqlRawAsync(string strQuery, object[] parametrs)
+    {
+        return await _context.Database.ExecuteSqlRawAsync(strQuery, parametrs.ToArray());
+    }
+
     public void SaveChanges()
     {
         try
@@ -43,7 +48,7 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
-    public void SaveChangesAsync()
+    public async void SaveChangesAsync()
     {
         try
         {

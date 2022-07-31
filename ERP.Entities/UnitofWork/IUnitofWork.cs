@@ -7,7 +7,8 @@ public interface IUnitOfWork : IDisposable
 {
     IGenericRepository<T> GetRepository<T>() where T : class;
 
-    object ExecuteSqlComman(string strQuery, params object[] parametrs);
+    object ExecuteSqlRaw(string strQuery, object[] parametrs);
+    Task<object> ExecuteSqlRawAsync(string strQuery, object[] parametrs);
     void SaveChanges();  
     void SaveChangesAsync();
 

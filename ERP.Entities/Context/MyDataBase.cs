@@ -9,6 +9,8 @@ using ERP.Models.Services;
 
 using Microsoft.EntityFrameworkCore;
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ERP.Entities.Context;
 
 public class MyDataBase : DbContext
@@ -47,6 +49,8 @@ public class MyDataBase : DbContext
 
     #region Other
     public DbSet<Session> Sessions { get; set; }
+                                                                          
+    public DbSet<SPIntResult> SPIntResults { get; set; }
     #endregion
 
     //
@@ -58,8 +62,10 @@ public class MyDataBase : DbContext
         modelBuilder.Entity<EMPEmployee>().HasIndex(b => b.NationalCode).IsUnique();
 
         modelBuilder.Entity<AdminRole>().HasIndex(b => b.RoleName).IsUnique();
-                                                        
-        modelBuilder.Entity<Session>().HasOne(p => p.AdminUser).WithMany();
+                                                              
+        modelBuilder.Entity<Session>().HasOne(p => p.AdminUser).WithMany();     
+
+        modelBuilder.Entity<SPIntResult>().HasNoKey();
 
         //modelBuilder.Entity<Session>()
         //    .HasOne(e => e.AdminUser);

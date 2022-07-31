@@ -19,6 +19,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         _context = context;
         _dbSet = context.Set<T>();
+    
     }
 
     public bool ExistData()
@@ -49,6 +50,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public T Get(Expression<Func<T, bool>> predicate)
     {
         return _dbSet.Where(predicate).SingleOrDefault();
+    }
+
+    public virtual IQueryable<T> FromSqlRaw(string strQuery, object[] parametrs)
+    {
+       
+        return _dbSet.FromSqlRaw(strQuery, parametrs.ToArray());
     }
 
     public virtual void Add(T entity)
@@ -85,7 +92,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         _dbSet.RemoveRange(entity);
     }
-       
+
+
     //--------------
 
     public async Task<bool> ExistDataAsync()

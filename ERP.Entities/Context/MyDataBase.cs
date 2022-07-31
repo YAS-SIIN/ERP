@@ -30,7 +30,8 @@ public class MyDataBase : DbContext
     #endregion
 
     #region Cartable
-    public DbSet<CARCartable> CARCartables { get; set; }
+    public DbSet<CARCartable> CARCartables { get; set; } 
+    public DbSet<CARCartableList> CARCartableLists { get; set; }
     public DbSet<CARCartableTrace> CARCartableTraces { get; set; }
     public DbSet<CARTable> CARTables { get; set; }
     #endregion
@@ -65,7 +66,8 @@ public class MyDataBase : DbContext
                                                               
         modelBuilder.Entity<Session>().HasOne(p => p.AdminUser).WithMany();     
 
-        modelBuilder.Entity<SPIntResult>().HasNoKey();
+        modelBuilder.Entity<SPIntResult>().HasNoKey();    
+        modelBuilder.Entity<CARCartableList>().HasNoKey();
 
         //modelBuilder.Entity<Session>()
         //    .HasOne(e => e.AdminUser);

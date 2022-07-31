@@ -5,6 +5,7 @@ using ERP.Models.Cartables;
 using ERP.Models.Employees;
 using ERP.Models.InOut;
 using ERP.Service.Admin;
+using ERP.Service.Cartables;
 using ERP.Service.Crud;
 using ERP.Service.Employees;
 using ERP.Service.InOut;
@@ -24,6 +25,7 @@ public class DependencyResolver
 
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IEmployeesService, EmployeesService>();
-        services.AddScoped<IRequestLeaveService, RequestLeaveService>();
+        services.AddScoped<IRequestLeaveService, RequestLeaveService>();  
+        services.AddScoped<ICartableService, CartableService>();
     }
 }

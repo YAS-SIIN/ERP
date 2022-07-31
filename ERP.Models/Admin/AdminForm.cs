@@ -13,7 +13,7 @@ public class AdminForm: BaseEntity<int>
 
     [Required]
     [StringLength(100)]
-    public string FormNameFarsi { get; set; }
+    public string FormNameFa { get; set; }
 
     public virtual ICollection<CARTable>? CARTable { get; set; }              
 

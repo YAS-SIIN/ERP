@@ -6,6 +6,7 @@ using ERP.Dtos.Employees;
 using ERP.Entities.UnitOfWork;
 using ERP.Framework.Exceptions;
 using ERP.Models.Admin;
+using ERP.Models.Cartables;
 using ERP.Models.Employees;
 using ERP.Models.InOut;
 using ERP.Models.Other;
@@ -15,22 +16,25 @@ using Microsoft.EntityFrameworkCore;
 
 using static ERP.Common.Enums.TypeEnum;
 
-namespace ERP.Service.InOut;
+namespace ERP.Service.Cartables;
 
-public class RequestLeaveService : IRequestLeaveService
+public class CartableService : ICartableService
 {                                         
     private readonly IUnitOfWork _uw;                                                                    
-    public RequestLeaveService(IUnitOfWork uw)
+    public CartableService(IUnitOfWork uw)
     {
         _uw = uw;
     }
 
-    public async Task<List<InOutRequestLeave>> GetAllByEmployeeAsync(EMPEmployee employee)
+    public async Task<List<CARCartableList>> GetAllByUserAsync(AdminUser user)
     {
-        return await _uw.GetRepository<InOutRequestLeave>().GetAll(x => x.Status != (short)BaseStatus.Deleted && x.EMPEmployee.Id == employee.Id).ToListAsync();
+        var Params = new List<SqlParameter>();
+        Params.Add(new SqlParameter("@UserId", user.Id));  
+        
+        return await _uw.GetRepository<CARCartableList>().FromSqlRaw("EXEC dbo.CARSignList @UserId = @UserId", Params.ToArray()).ToListAsync();
     }
 
-    public async Task<InOutRequestLeave> ConfirmRequestLeaveAsync(int Id, int EmployeeId)
+    public async Task<InOutRequestLeave> ConfirmRequestAsync(int Id, int EmployeeId)
     {
 
         InOutRequestLeave model = await _uw.GetRepository<InOutRequestLeave>().GetAsync(x => x.Id == Id && x.Status == (short)BaseStatus.Deactive);

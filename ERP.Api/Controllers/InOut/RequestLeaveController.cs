@@ -39,7 +39,7 @@ namespace ERP.Api.Controllers.InOut
             UserSessionModel session = (UserSessionModel)HttpContext.Items["UserSession"];
             EMPEmployee employee = await _accountService.GetEmployeeByToken(session.Token);     
 
-            var result = await _requestLeaveService.GetUserAllAsync(employee);
+            var result = await _requestLeaveService.GetAllByEmployeeAsync(employee);
 
             if (model.Year != 0 && model.Year != null)
             {

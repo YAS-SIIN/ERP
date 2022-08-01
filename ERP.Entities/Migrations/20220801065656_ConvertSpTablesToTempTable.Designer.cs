@@ -4,6 +4,7 @@ using ERP.Entities.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Entities.Migrations
 {
     [DbContext(typeof(MyDataBase))]
-    partial class MyDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20220801065656_ConvertSpTablesToTempTable")]
+    partial class ConvertSpTablesToTempTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,7 +62,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("AdminSubSystemId");
 
-                    b.ToTable("AdminForms", (string)null);
+                    b.ToTable("AdminForms");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminRole", b =>
@@ -94,7 +96,7 @@ namespace ERP.Entities.Migrations
                     b.HasIndex("RoleName")
                         .IsUnique();
 
-                    b.ToTable("AdminRoles", (string)null);
+                    b.ToTable("AdminRoles");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminSubSystem", b =>
@@ -130,7 +132,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdminSubSystems", (string)null);
+                    b.ToTable("AdminSubSystems");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminUser", b =>
@@ -191,7 +193,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("EMPEmployeeId");
 
-                    b.ToTable("AdminUsers", (string)null);
+                    b.ToTable("AdminUsers");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminUserRole", b =>
@@ -227,7 +229,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("AdminUserId");
 
-                    b.ToTable("AdminUserRoles", (string)null);
+                    b.ToTable("AdminUserRoles");
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartable", b =>
@@ -278,7 +280,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("EMPEmployeeId");
 
-                    b.ToTable("CARCartables", (string)null);
+                    b.ToTable("CARCartables");
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartableTrace", b =>
@@ -327,7 +329,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("CARTableId");
 
-                    b.ToTable("CARCartableTraces", (string)null);
+                    b.ToTable("CARCartableTraces");
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARTable", b =>
@@ -363,7 +365,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("AdminFormId");
 
-                    b.ToTable("CARTables", (string)null);
+                    b.ToTable("CARTables");
                 });
 
             modelBuilder.Entity("ERP.Models.Employees.EMPEmployee", b =>
@@ -451,7 +453,7 @@ namespace ERP.Entities.Migrations
                     b.HasIndex("NationalCode")
                         .IsUnique();
 
-                    b.ToTable("EMPEmployees", (string)null);
+                    b.ToTable("EMPEmployees");
                 });
 
             modelBuilder.Entity("ERP.Models.InOut.InOutRequestLeave", b =>
@@ -529,7 +531,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("EMPEmployeeId");
 
-                    b.ToTable("InOutRequestLeaves", (string)null);
+                    b.ToTable("InOutRequestLeaves");
                 });
 
             modelBuilder.Entity("ERP.Models.Other.Session", b =>
@@ -573,7 +575,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("AdminUserId");
 
-                    b.ToTable("Sessions", (string)null);
+                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("ERP.Models.Services.ServRequestService", b =>
@@ -617,51 +619,7 @@ namespace ERP.Entities.Migrations
 
                     b.HasIndex("EMPEmployeeId");
 
-                    b.ToTable("ServRequestServices", (string)null);
-                });
-
-            modelBuilder.Entity("ERP.Models.SP.SPCartableList", b =>
-                {
-                    b.Property<int>("CARTableId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FieldCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FormName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FormNameFa")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RequestDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SignTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SignTitleFa")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TableName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("SPCartableList", null, t => t.ExcludeFromMigrations());
-                });
-
-            modelBuilder.Entity("ERP.Models.SP.SPIntResult", b =>
-                {
-                    b.Property<int>("SpReturnResult")
-                        .HasColumnType("int");
-
-                    b.ToTable("SPIntResult", null, t => t.ExcludeFromMigrations());
+                    b.ToTable("ServRequestServices");
                 });
 
             modelBuilder.Entity("ERP.Models.Admin.AdminForm", b =>

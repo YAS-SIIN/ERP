@@ -8,7 +8,7 @@ using ERP.Framework.Exceptions;
 using ERP.Models.Admin;
 using ERP.Models.Employees;
 using ERP.Models.InOut;
-using ERP.Models.Other;
+using ERP.Models.SP;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;

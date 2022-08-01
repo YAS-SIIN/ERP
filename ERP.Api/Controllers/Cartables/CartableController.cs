@@ -31,7 +31,7 @@ namespace ERP.Api.Controllers.Cartables
             UserSessionModel session = (UserSessionModel)HttpContext.Items["UserSession"];
             AdminUser user = await _accountService.GetAccountByToken(session.Token);
 
-            var result = await _cartableService.GetAllByUserAsync(user);
+            var result = await _cartableService.GetAllByUserAsync(model, user);
 
             //if (model.Year != 0 && model.Year != null)
             //{

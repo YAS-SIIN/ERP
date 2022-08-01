@@ -52,6 +52,15 @@ namespace ERP.Api.Controllers.InOut
             return OkData(result);
         }
 
+        [HttpGet, Route("[action]")]
+        [Authorize]
+        public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> GetAsync(int Id)
+        {        
+            var result = await _crudService.GetByIdAsync(Id);
+              
+            return OkData(result);
+        }
+
         [HttpPost, Route("[action]")]
         [Authorize(Role = "RequestLeave")]
         public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> InsertAsync([FromBody] InOutRequestLeave model)

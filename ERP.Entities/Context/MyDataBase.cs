@@ -6,6 +6,7 @@ using ERP.Models.Employees;
 using ERP.Models.InOut;
 using ERP.Models.Other;
 using ERP.Models.Services;
+using ERP.Models.SP;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +32,6 @@ public class MyDataBase : DbContext
 
     #region Cartable
     public DbSet<CARCartable> CARCartables { get; set; } 
-    public DbSet<CARCartableList> CARCartableLists { get; set; }
     public DbSet<CARCartableTrace> CARCartableTraces { get; set; }
     public DbSet<CARTable> CARTables { get; set; }
     #endregion
@@ -50,8 +50,12 @@ public class MyDataBase : DbContext
 
     #region Other
     public DbSet<Session> Sessions { get; set; }
-                                                                          
+    #endregion
+
+    #region SP
+
     public DbSet<SPIntResult> SPIntResults { get; set; }
+    public DbSet<SPCartableList> SPCartableLists { get; set; }
     #endregion
 
     //
@@ -66,8 +70,8 @@ public class MyDataBase : DbContext
                                                               
         modelBuilder.Entity<Session>().HasOne(p => p.AdminUser).WithMany();     
 
-        modelBuilder.Entity<SPIntResult>().HasNoKey();    
-        modelBuilder.Entity<CARCartableList>().HasNoKey();
+        modelBuilder.Entity<SPIntResult>().ToTable(p=>p.ExcludeFromMigrations()).HasNoKey();    
+       modelBuilder.Entity<SPCartableList>().ToTable(p => p.ExcludeFromMigrations()).HasNoKey();
 
         //modelBuilder.Entity<Session>()
         //    .HasOne(e => e.AdminUser);

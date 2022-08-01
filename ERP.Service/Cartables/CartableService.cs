@@ -6,10 +6,9 @@ using ERP.Dtos.Employees;
 using ERP.Entities.UnitOfWork;
 using ERP.Framework.Exceptions;
 using ERP.Models.Admin;
-using ERP.Models.Cartables;
 using ERP.Models.Employees;
 using ERP.Models.InOut;
-using ERP.Models.Other;
+using ERP.Models.SP;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -26,12 +25,13 @@ public class CartableService : ICartableService
         _uw = uw;
     }
 
-    public async Task<List<CARCartableList>> GetAllByUserAsync(AdminUser user)
+    public async Task<List<SPCartableList>> GetAllByUserAsync(CartableDto model, AdminUser user)
     {
         var Params = new List<SqlParameter>();
-        Params.Add(new SqlParameter("@UserId", user.Id));  
-        
-        return await _uw.GetRepository<CARCartableList>().FromSqlRaw("EXEC dbo.CARSignList @UserId = @UserId", Params.ToArray()).ToListAsync();
+        Params.Add(new SqlParameter("@UserId", user.Id));
+        Params.Add(new SqlParameter("@Status", model.Status));
+
+        return await _uw.GetRepository<SPCartableList>().FromSqlRaw("EXEC dbo.CARSignList @UserId = @UserId, @Status = @Status", Params.ToArray()).ToListAsync();
     }
 
     public async Task<InOutRequestLeave> ConfirmRequestAsync(int Id, int EmployeeId)

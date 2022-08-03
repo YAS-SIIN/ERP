@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ERP.Models.SP;
 
-public class SPCartableList
+public class SPCARSignList
 {                   
     public string FieldCode { get; set; }         
     public string RequestDate { get; set; }

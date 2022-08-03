@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ERP.Models.Admin;
 using ERP.Service.Cartables;
+using ERP.Models.SP;
 
 namespace ERP.Api.Controllers.Cartables
 {
@@ -26,7 +27,7 @@ namespace ERP.Api.Controllers.Cartables
         }
         [HttpPost, Route("[action]")]
         [Authorize]
-        public async Task<ActionResult<ApiResultViewModel<bool>>> GetAsync([FromBody] CartableDto model)
+        public async Task<ActionResult<ApiResultViewModel<SPCARSignList>>> GetAsync([FromBody] CartableDto model)
         {
             UserSessionModel session = (UserSessionModel)HttpContext.Items["UserSession"];
             AdminUser user = await _accountService.GetAccountByToken(session.Token);
@@ -44,5 +45,13 @@ namespace ERP.Api.Controllers.Cartables
             return OkData(result);
         }
 
+        [HttpGet, Route("[action]")]
+        [Authorize]
+        public async Task<ActionResult<ApiResultViewModel<dynamic>>> GetAsync(int id, string FormName)
+        {
+            var result = await _cartableService.GetByIdAsync(id.ToString(), FormName);
+
+            return OkData(result);
+        }
     }
 }

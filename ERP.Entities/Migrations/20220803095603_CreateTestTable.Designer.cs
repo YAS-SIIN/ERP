@@ -4,6 +4,7 @@ using ERP.Entities.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Entities.Migrations
 {
     [DbContext(typeof(MyDataBase))]
-    partial class MyDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20220803095603_CreateTestTable")]
+    partial class CreateTestTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,6 +230,24 @@ namespace ERP.Entities.Migrations
                     b.HasIndex("AdminUserId");
 
                     b.ToTable("AdminUserRoles");
+                });
+
+            modelBuilder.Entity("ERP.Models.Admin.TestTable", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"), 1L, 1);
+
+                    b.Property<string>("TestField")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TestTables");
                 });
 
             modelBuilder.Entity("ERP.Models.Cartables.CARCartable", b =>

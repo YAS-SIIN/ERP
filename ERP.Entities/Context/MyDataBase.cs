@@ -27,7 +27,8 @@ public class MyDataBase : DbContext
     public DbSet<AdminRole> AdminRoles { get; set; }
     public DbSet<AdminForm> AdminForms { get; set; }  
     public DbSet<AdminSubSystem> AdminSubSystems { get; set; }
-    public DbSet<AdminUserRole> AdminUserRoles { get; set; }
+    public DbSet<AdminUserRole> AdminUserRoles { get; set; }       
+   // public DbSet<TestTable> TestTables { get; set; }
     #endregion
 
     #region Cartable
@@ -55,7 +56,7 @@ public class MyDataBase : DbContext
     #region SP
 
     public DbSet<SPIntResult> SPIntResults { get; set; }
-    public DbSet<SPCartableList> SPCartableLists { get; set; }
+    public DbSet<SPCARSignList> SPCartableLists { get; set; }
     #endregion
 
     //
@@ -71,7 +72,9 @@ public class MyDataBase : DbContext
         modelBuilder.Entity<Session>().HasOne(p => p.AdminUser).WithMany();     
 
         modelBuilder.Entity<SPIntResult>().ToTable(p=>p.ExcludeFromMigrations()).HasNoKey();    
-       modelBuilder.Entity<SPCartableList>().ToTable(p => p.ExcludeFromMigrations()).HasNoKey();
+       modelBuilder.Entity<SPCARSignList>().ToTable(p => p.ExcludeFromMigrations()).HasNoKey();
+                    
+        //modelBuilder.Entity<TestTable>().Property(f => f.Id).ValueGeneratedOnAdd();
 
         //modelBuilder.Entity<Session>()
         //    .HasOne(e => e.AdminUser);

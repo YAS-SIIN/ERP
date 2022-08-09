@@ -30,9 +30,19 @@ public class ResetPasswordVerificationCodeInputModel
     public string MobileNumber { get; set; }   
 }
 
-public class ResetPasswordInputModel
+public class ResetPasswordDto
 {
-    public string MobileNumber { get; set; }      
-    public string Password { get; set; }         
-    public string VerificationCode { get; set; }            
+    [Required]
+    [DataType(DataType.Password)]
+    public string OldPassword { get; set; }
+
+    [Required]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$")]
+    [DataType(DataType.Password)]
+    public string Password { get; set; }
+    
+    [Compare("Password")]
+    [Required]
+    [DataType(DataType.Password)]
+    public string RePassword { get; set; }                  
 }

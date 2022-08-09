@@ -48,9 +48,9 @@ public class AccountService : IAccountService
         return session.AdminUser;
     }
 
-    public async Task<EMPEmployee> GetEmployeeByAccount(AdminUser user)
+    public async Task<EMPEmployee> GetEmployeeByUserId(int? userId)
     {
-        var account = await _uw.GetRepository<AdminUser>().GetAll(x=> x.Status == (short)BaseStatus.Active && x.EMPEmployee.Status == (short)BaseStatus.Active && x.Id == user.Id).Include(e => e.EMPEmployee).FirstOrDefaultAsync();
+        var account = await _uw.GetRepository<AdminUser>().GetAll(x=> x.Status == (short)BaseStatus.Active && x.EMPEmployee.Status == (short)BaseStatus.Active && x.Id == userId).Include(e => e.EMPEmployee).FirstOrDefaultAsync();
         //var session = sessionLst.Where(x => x.Token == token && x.IsValid).FirstOrDefault();
         if (account == null)
             throw new ValidationException(ErrorList.NotFound, "Employee is not found.");
@@ -162,26 +162,27 @@ var session =await _uw.GetRepository<Session>().GetAll(x => x.Token == token && 
 
         //await _notificationHandler.SendVerificationCodeAsync(mobileNumber, verificationCode, cancellationToken);
         _uw.GetRepository<AdminUser>().Update(currentAccount);
-        _uw.SaveChangesAsync();
+        _uw.SaveChanges();
 
     }
 
-    public async Task ResetPasswordAsync(string UserName, string password, string verificationCode)
+    public async Task<ResetPasswordDto> ResetPasswordAsync(ResetPasswordDto model, int? userId)
     {
-        var currentAccount = await _uw.GetRepository<AdminUser>().GetAsync(x => x.UserName.ToLower() == UserName.Trim().ToLower() && x.Status == (short)BaseStatus.Active);
-        if (currentAccount == null)
-            throw new ValidationException(ErrorList.NotFound, "کاربر مورد نظر یافت نشد.");
 
-        if (currentAccount.VerificationCode != verificationCode)
-            throw new ValidationException(ErrorList.NotFound, "Verification code is not working.");
-                                            
-        currentAccount.PassWord = _security.HashPassword(password);
+        var currentAccount =await _uw.GetRepository<AdminUser>().GetByIdAsync(userId);
+
+        if (currentAccount.PassWord != _security.HashPassword(model.OldPassword))
+            throw new ValidationException(ErrorList.NotFound, "کلمه عبور قدیمی صحیح نمی باشد.");
+
+        currentAccount.PassWord = _security.HashPassword(model.Password);
         currentAccount.UpdateDateTime = DateTime.Now;
         currentAccount.Status = (short)BaseStatus.Active;
         currentAccount.VerificationCode = string.Empty;
 
         _uw.GetRepository<AdminUser>().Update(currentAccount);
-        _uw.SaveChangesAsync();
+        _uw.SaveChanges();
+
+        return model;
     }
 
 }

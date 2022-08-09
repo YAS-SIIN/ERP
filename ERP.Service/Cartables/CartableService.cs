@@ -26,60 +26,56 @@ public class CartableService : ICartableService
         _uw = uw;
     }
 
-    public async Task<List<SPCARSignList>> GetAllByUserAsync(CartableDto model, AdminUser user)
+    public async Task<List<SPCARSignList>> GetAllByUserAsync(CartableDto model, int? userId)
     {
         var Params = new List<SqlParameter>();
-        Params.Add(new SqlParameter("@UserId", user.Id));
+        Params.Add(new SqlParameter("@UserId", userId));
         Params.Add(new SqlParameter("@Status", model.Status));
 
         return await _uw.GetRepository<SPCARSignList>().FromSqlRaw("EXEC dbo.CARSignList @UserId = @UserId, @Status = @Status", Params.ToArray()).ToListAsync();
     }
 
-    public async Task<InOutRequestLeave> ConfirmRequestAsync(int Id, int EmployeeId)
+    public async Task<SPCARSignList> ConfirmRequestAsync(SPCARSignList model)
     {
-
-        InOutRequestLeave model = await _uw.GetRepository<InOutRequestLeave>().GetAsync(x => x.Id == Id && x.Status == (short)BaseStatus.Deactive);
-        if (model == null)
-        {
-            throw new ValidationException(ErrorList.NotFound, "مرخصی مورد نظر یافت نشد.");
-        }
-
-        var Params = new List<SqlParameter>();       
-        Params.Add(new SqlParameter("@FieldCode", model.Id.ToString()));
+                              
+        var Params = new List<SqlParameter>();          
+        Params.Add(new SqlParameter("@FieldCode", model.FieldCode));
         Params.Add(new SqlParameter("@RequestDate", model.RequestDate));
-        Params.Add(new SqlParameter("@EmployeeId", EmployeeId));   
-        Params.Add(new SqlParameter("@Description", model.Description));
+        Params.Add(new SqlParameter("@TableName", model.TableName.ToString()));        
+        Params.Add(new SqlParameter("@EmployeeId", model.EMPEmployeeId));      
+        Params.Add(new SqlParameter("@DeleteFlag", model.Status));
+        Params.Add(new SqlParameter("@Description", ""));
+        Params.Add(new SqlParameter("@OrderNoIN", model.Status== 1 ?model.OrderNo.ToString() : "0"));
         Params.Add(new SqlParameter("@SignDate", DateTime.Now.ToPersianDate()));            
 
-        model.UpdateDateTime = DateTime.Now;
-        model.Status = (short)BaseStatus.Active;
+        
         //var a =_uw.ExecuteSqlRaw("EXEC [dbo].[CARSignRecord] @TableId = 2, @FieldCode = @FieldCode, @RequestDate = @RequestDate, @EmployeeId = @EmployeeId, @DeleteFlag = 0, @Description = @Description, @OrderNoIN = 0, @SignDate = @SignDate, @ConfirmType = 0", Params.ToArray());
-       var a = _uw.GetRepository<SPIntResult>().FromSqlRaw("DECLARE	@SpReturnResult int; EXEC	@SpReturnResult = dbo.CARSignRecord @TableId = 2, @FieldCode = @FieldCode, @RequestDate = @RequestDate, @EmployeeId = @EmployeeId, @DeleteFlag = 0, @Description = @Description, @OrderNoIN = 0, @SignDate = @SignDate, @ConfirmType = 0; SELECT	'SpReturnResult' = @SpReturnResult", Params.ToArray());
+       var spResult = await _uw.GetRepository<SPIntResult>().FromSqlRaw("DECLARE	@SpReturnResult int; EXEC @SpReturnResult = dbo.CARSignRecord @TableName = @TableName, @FieldCode = @FieldCode, @RequestDate = @RequestDate, @EmployeeId = @EmployeeId, @DeleteFlag = @DeleteFlag, @Description = @Description, @OrderNoIN = @OrderNoIN, @SignDate = @SignDate, @ConfirmType = 0; SELECT	'SpReturnResult' = @SpReturnResult", Params.ToArray()).ToListAsync();
 
-        if (a.ToList().FirstOrDefault().SpReturnResult == 0)
+        if (spResult.FirstOrDefault().SpReturnResult == 0)
         {
             throw new ValidationException(ErrorList.NotAccess, "شما به این امضاء دسترسی ندارید.");
         }
-        if (a.ToList().FirstOrDefault().SpReturnResult == 2)
+        if (spResult.FirstOrDefault().SpReturnResult == 2)
         {
             throw new ValidationException(ErrorList.NotFound, "امضاء مورد نظر یافت نشد.");
         }
-        _uw.GetRepository<InOutRequestLeave>().Update(model);
+ 
                   
         _uw.SaveChanges();
 
         return model;
     }
 
-    public async Task<dynamic> GetByIdAsync(string fieldCode, string FormName)
+    public async Task<dynamic> GetByIdAsync(string FieldCode, string TableName)
     {
 
         var lst = await _uw.GetRepository<CARCartableTrace>()
-       .GetAll(x => x.CARTable.AdminForm.FormName == FormName && x.Status == (short)BaseStatus.Active)
+       .GetAll(x => x.CARTable.TableName == TableName && x.Status == (short)BaseStatus.Active)
        .Select(x => new
        {
            CartableSigne = x,
-           CartableSigned = _uw.GetRepository<CARCartable>().GetAll().Where(a => a.CARCartableTrace.Id == x.Id && a.Status == (short)BaseStatus.Active && a.FieldCode == fieldCode).Include(x => x.EMPEmployee).Select(b => new {  b.SignDate, SignTime= b.CreateDateTime.ToShortTimeString(), Employee= b.EMPEmployee.FirstName + " " + b.EMPEmployee.LastName, b.EMPEmployee.EmpoloyeeNo }).ToList(),           
+           CartableSigned = _uw.GetRepository<CARCartable>().GetAll().Where(a => a.CARCartableTrace.Id == x.Id && a.Status == (short)BaseStatus.Active && a.FieldCode == FieldCode).Include(x => x.EMPEmployee).Select(b => new {  b.SignDate, SignTime= b.CreateDateTime.ToShortTimeString(), Employee= b.EMPEmployee.FirstName + " " + b.EMPEmployee.LastName, b.EMPEmployee.EmpoloyeeNo }).ToList(),           
        })
        .ToListAsync();
  

@@ -23,7 +23,8 @@ BEGIN
     -- Insert statements for procedure here
 IF @Status = 0
 BEGIN
-SELECT        CARCartables.FieldCode, CARCartables.RequestDate, CARCartableTraces_NewLevel.CARTableId, CARCartableTraces_NewLevel.SignTitle, CARCartableTraces_NewLevel.SignTitleFa, CARTables.TableName, AdminForms.FormName, AdminForms.FormNameFa, @Status as Status
+SELECT        CARCartables.FieldCode, CARCartables.RequestDate, CARCartableTraces_NewLevel.CARTableId, CARCartableTraces_NewLevel.SignTitle, CARCartableTraces_NewLevel.SignTitleFa, 
+			  CARTables.TableName, AdminForms.FormName, AdminForms.FormNameFa, @Status as Status, CARCartables.EMPEmployeeId, CARCartableTraces_1.OrderNo
 FROM            AdminForms INNER JOIN
                          CARTables ON AdminForms.Id = CARTables.AdminFormId INNER JOIN
                          CARCartables INNER JOIN
@@ -41,7 +42,8 @@ WHERE        (AdminUserRoles.AdminUserId = @UserId)
 END
 ELSE
 BEGIN
-SELECT        CARCartables.FieldCode, CARCartables.RequestDate, CARCartableTraces_NewLevel.CARTableId, CARCartableTraces_NewLevel.SignTitle, CARCartableTraces_NewLevel.SignTitleFa, CARTables.TableName, AdminForms.FormName, AdminForms.FormNameFa, @Status as Status
+SELECT        CARCartables.FieldCode, CARCartables.RequestDate, CARCartableTraces_NewLevel.CARTableId, CARCartableTraces_NewLevel.SignTitle, CARCartableTraces_NewLevel.SignTitleFa, 
+			  CARTables.TableName, AdminForms.FormName, AdminForms.FormNameFa, @Status as Status, CARCartables.EMPEmployeeId, CARCartableTraces_1.OrderNo
 FROM            AdminForms INNER JOIN
                          CARTables ON AdminForms.Id = CARTables.AdminFormId INNER JOIN
                          CARCartables INNER JOIN

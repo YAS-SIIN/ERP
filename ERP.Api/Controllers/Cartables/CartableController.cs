@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using ERP.Models.Admin;
 using ERP.Service.Cartables;
 using ERP.Models.SP;
+using ERP.Models.Employees;
+using ERP.Framework.Exceptions;
 
 namespace ERP.Api.Controllers.Cartables
 {
@@ -29,10 +31,9 @@ namespace ERP.Api.Controllers.Cartables
         [Authorize]
         public async Task<ActionResult<ApiResultViewModel<SPCARSignList>>> GetAsync([FromBody] CartableDto model)
         {
-            UserSessionModel session = (UserSessionModel)HttpContext.Items["UserSession"];
-            AdminUser user = await _accountService.GetAccountByToken(session.Token);
+     
 
-            var result = await _cartableService.GetAllByUserAsync(model, user);
+            var result = await _cartableService.GetAllByUserAsync(model, UserSession?.UserId);
 
             //if (model.Year != 0 && model.Year != null)
             //{
@@ -47,9 +48,21 @@ namespace ERP.Api.Controllers.Cartables
 
         [HttpGet, Route("[action]")]
         [Authorize]
-        public async Task<ActionResult<ApiResultViewModel<dynamic>>> GetAsync(int id, string FormName)
+        public async Task<ActionResult<ApiResultViewModel<dynamic>>> GetAsync(int Id, string TableName)
         {
-            var result = await _cartableService.GetByIdAsync(id.ToString(), FormName);
+            var result = await _cartableService.GetByIdAsync(Id.ToString(), TableName);
+
+            return OkData(result);
+        }
+
+        [HttpPut, Route("[action]")]
+        [Authorize]
+        public async Task<ActionResult<ApiResultViewModel<SPCARSignList>>> ConfirmAsync(SPCARSignList model)
+        {       
+            EMPEmployee employee = await _accountService.GetEmployeeByUserId(UserSession?.UserId);
+            model.EMPEmployeeId = employee.Id;
+            
+            var result = await _cartableService.ConfirmRequestAsync(model);
 
             return OkData(result);
         }

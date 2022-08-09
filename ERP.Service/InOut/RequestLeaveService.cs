@@ -38,8 +38,8 @@ public class RequestLeaveService : IRequestLeaveService
         {
             throw new ValidationException(ErrorList.NotFound, "مرخصی مورد نظر یافت نشد.");
         }
-
-        var Params = new List<SqlParameter>();       
+        
+var Params = new List<SqlParameter>();       
         Params.Add(new SqlParameter("@FieldCode", model.Id.ToString()));
         Params.Add(new SqlParameter("@RequestDate", model.RequestDate));
         Params.Add(new SqlParameter("@EmployeeId", EmployeeId));   
@@ -49,13 +49,13 @@ public class RequestLeaveService : IRequestLeaveService
         model.UpdateDateTime = DateTime.Now;
         model.Status = (short)BaseStatus.Active;
         //var a =_uw.ExecuteSqlRaw("EXEC [dbo].[CARSignRecord] @TableId = 2, @FieldCode = @FieldCode, @RequestDate = @RequestDate, @EmployeeId = @EmployeeId, @DeleteFlag = 0, @Description = @Description, @OrderNoIN = 0, @SignDate = @SignDate, @ConfirmType = 0", Params.ToArray());
-       var a = _uw.GetRepository<SPIntResult>().FromSqlRaw("DECLARE	@SpReturnResult int; EXEC	@SpReturnResult = dbo.CARSignRecord @TableId = 2, @FieldCode = @FieldCode, @RequestDate = @RequestDate, @EmployeeId = @EmployeeId, @DeleteFlag = 0, @Description = @Description, @OrderNoIN = 0, @SignDate = @SignDate, @ConfirmType = 0; SELECT	'SpReturnResult' = @SpReturnResult", Params.ToArray());
+       var spResult =await _uw.GetRepository<SPIntResult>().FromSqlRaw("DECLARE	@SpReturnResult int; EXEC @SpReturnResult = dbo.CARSignRecord @TableName = 'InOutRequestLeaves', @FieldCode = @FieldCode, @RequestDate = @RequestDate, @EmployeeId = @EmployeeId, @DeleteFlag = 0, @Description = @Description, @OrderNoIN = 0, @SignDate = @SignDate, @ConfirmType = 0; SELECT	'SpReturnResult' = @SpReturnResult", Params.ToArray()).ToListAsync();
 
-        if (a.ToList().FirstOrDefault().SpReturnResult == 0)
+        if (spResult.FirstOrDefault().SpReturnResult == 0)
         {
             throw new ValidationException(ErrorList.NotAccess, "شما به این امضاء دسترسی ندارید.");
         }
-        if (a.ToList().FirstOrDefault().SpReturnResult == 2)
+        if (spResult.FirstOrDefault().SpReturnResult == 2)
         {
             throw new ValidationException(ErrorList.NotFound, "امضاء مورد نظر یافت نشد.");
         }

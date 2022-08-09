@@ -9,7 +9,7 @@ namespace ERP.Models.Cartables;
 public class CARTable : BaseEntity<int>
 {
     [Required]
-    [StringLength(20)]
+    [StringLength(50)]
     public string TableName { get; set; }
                                                         
     public virtual ICollection<CARCartableTrace>? CARCartableTrace { get; set; }

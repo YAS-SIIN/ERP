@@ -10,7 +10,7 @@ namespace ERP.Service.Cartables;
 
 public interface ICartableService
 {
-    Task<List<SPCARSignList>> GetAllByUserAsync(CartableDto model, AdminUser user);
-    Task<InOutRequestLeave> ConfirmRequestAsync(int Id, int EmployeeId);
-    Task<dynamic> GetByIdAsync(string fieldCode, string FormName);
+    Task<List<SPCARSignList>> GetAllByUserAsync(CartableDto model, int? userId);
+    Task<SPCARSignList> ConfirmRequestAsync(SPCARSignList model);
+    Task<dynamic> GetByIdAsync(string FieldCode, string TableName);
 }

@@ -81,12 +81,15 @@ public class AccountController : ApiControllerBase
 
     [HttpPost, Route("[action]")]
     [Authorize]
-    public async Task ResetPassword([FromBody] ResetPasswordInputModel model)
+    public async Task<ActionResult<ApiResultViewModel<ResetPasswordDto>>> ResetPassword([FromBody] ResetPasswordDto model)
     {
-        if (UserSession != null && UserSession?.UserId != null)
-            throw new ValidationException(ErrorList.LoginedUser, "You're logged-in already.");
+        if (!ModelState.IsValid)
+        {                                      
+            return BadRequest(ModelState);
+        }
 
-        await _accountService.ResetPasswordAsync(model.MobileNumber, model.Password, model.VerificationCode);
+      var Resualt =  await _accountService.ResetPasswordAsync(model, UserSession?.UserId);
+        return OkData(Resualt);
     }
 
 }

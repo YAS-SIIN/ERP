@@ -6,4 +6,6 @@
         public int? Status { get; set; }
     }
 
+ 
+
 }

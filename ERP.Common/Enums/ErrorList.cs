@@ -19,8 +19,7 @@ namespace ERP.Common.Enums
 
         [Display(Name = "خطایی در انجتم عملیات رخ داده است.")]
         public const string Error = "102";
-
-
+                
         [Display(Name = "فرمت فایل مجاز نمی باشد.")]
         public const string FileFormat = "103";
 
@@ -32,5 +31,9 @@ namespace ERP.Common.Enums
 
         [Display(Name = "شما وارد سیستم شده اید.")]
         public const string LoginedUser = "106";
+
+        [Display(Name = "اطلاعات مورد نظر قابل حذف نمی باشد.")]
+        public const string NotDelete = "107";
+
     }
 }

@@ -79,6 +79,16 @@ Set @YearMonthDay = SUBSTRING(@SignDate,1,4) + SUBSTRING(@SignDate,6,2) + SUBSTR
  
 IF @DeleteFlag = 1 And @OrderNo <> 0  
 BEGIN 
+	IF EXISTS (SELECT       CARCartables.Id
+				FROM            CARCartables INNER JOIN
+                         CARCartableTraces ON CARCartables.CARCartableTraceId = CARCartableTraces.Id INNER JOIN
+                         CARTables ON CARCartableTraces.CARTableId = CARTables.Id
+				WHERE        CARCartableTraces.CARTableId = @TableId AND CARCartables.FieldCode = @FieldCode AND CARCartables.RequestDate = @RequestDate AND CARCartables.Status = 1 AND CARCartableTraces.Status = 1 AND CARCartableTraces.OrderNo = @OrderNo + 1)
+	BEGIN
+		-- امضاء مرحله بعدی نزده شده باشد
+		RETURN 3
+	END
+
 	Set @AdminRoleId = (Select AdminRoleId From CARCartableTraces Where Id = @CartableTraceId)
 	IF @AdminRoleId <> 0
 	BEGIN 
@@ -97,7 +107,8 @@ BEGIN
 
     UPDATE CARCartables SET Status = 3 
     Where  CARCartableTraceId = @CartableTraceId AND FieldCode = @FieldCode AND RequestDate = @RequestDate AND Status = 1
-
+	
+	RETURN 1
 END
 ELSE
 BEGIN

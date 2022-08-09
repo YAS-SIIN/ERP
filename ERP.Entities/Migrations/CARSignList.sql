@@ -38,7 +38,7 @@ FROM            AdminForms INNER JOIN
                          CARCartableTraces AS CARCartableTraces_NewLevel ON CARCartableTraces_1.OrderNo + 1 = CARCartableTraces_NewLevel.OrderNo AND CARCartableTraces_1.CARTableId = CARCartableTraces_NewLevel.CARTableId ON 
                          CARTables.Id = CARCartableTraces_NewLevel.CARTableId INNER JOIN
                          AdminUserRoles ON CARCartableTraces_NewLevel.AdminRoleId = AdminUserRoles.AdminRoleId
-WHERE        (AdminUserRoles.AdminUserId = @UserId)
+WHERE        CARCartables.Status = 1 AND AdminUserRoles.AdminUserId = @UserId
 END
 ELSE
 BEGIN
@@ -57,7 +57,7 @@ FROM            AdminForms INNER JOIN
                          CARCartableTraces AS CARCartableTraces_NewLevel ON CARCartableTraces_1.OrderNo = CARCartableTraces_NewLevel.OrderNo AND CARCartableTraces_1.CARTableId = CARCartableTraces_NewLevel.CARTableId ON 
                          CARTables.Id = CARCartableTraces_NewLevel.CARTableId INNER JOIN
                          AdminUserRoles ON CARCartableTraces_NewLevel.AdminRoleId = AdminUserRoles.AdminRoleId
-WHERE        (AdminUserRoles.AdminUserId = @UserId)
+WHERE		 CARCartables.Status = 1 AND AdminUserRoles.AdminUserId = @UserId
 END
 
 END

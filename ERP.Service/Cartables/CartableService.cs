@@ -59,9 +59,12 @@ public class CartableService : ICartableService
         if (spResult.FirstOrDefault().SpReturnResult == 2)
         {
             throw new ValidationException(ErrorList.NotFound, "امضاء مورد نظر یافت نشد.");
+        }                                            
+        if (spResult.FirstOrDefault().SpReturnResult == 3)
+        {
+            throw new ValidationException(ErrorList.NotDelete, "این امضاء بدلیل امضاء شدن مرحله بعدی قابل حذف نمی باشد.");
         }
- 
-                  
+
         _uw.SaveChanges();
 
         return model;

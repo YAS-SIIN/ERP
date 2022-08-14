@@ -27,22 +27,17 @@ using static ERP.Common.Enums.TypeEnum;
 namespace ERP.Service.Admin;
 
 public class UsersRolesService : IUsersRolesService
-{
-     
-    private readonly ISecurity _security;
-    private readonly IJwtManager _jwtManager;
+{                                             
     private readonly IUnitOfWork _uw;
  
-    public UsersRolesService(IOptionsMonitor<ApplicationOptions> options, ISecurity security, IJwtManager jwtManager, IUnitOfWork uw)
-    {
-        _security = security;
-        _jwtManager = jwtManager;
+    public UsersRolesService( IUnitOfWork uw)
+    {                          
         _uw = uw;
     }
         
     public async Task<dynamic> GetRolesByUserAsync(int UserId)
     {                              
-        return await _uw.GetRepository<AdminRole>().GetAll(x => x.Status == (short)BaseStatus.Active).Select(x => new { x, HasRole = _uw.GetRepository<AdminUserRole>().GetAll().Any(a => a.AdminRole.Id == x.Id && x.Status == (short)BaseStatus.Active && a.AdminUser.Id == UserId) }).ToListAsync();
+        return await _uw.GetRepository<AdminRole>().GetAll(x => x.Status == (short)BaseStatus.Active).Select(x => new { AdminRole = x, HasRole = _uw.GetRepository<AdminUserRole>().GetAll().Any(a => a.AdminRole.Id == x.Id && x.Status == (short)BaseStatus.Active && a.AdminUser.Id == UserId) }).ToListAsync();
     }
 
     public async Task<AdminUserRole> InsertUpdateUserRoleAsync(UserRoleDto model)
@@ -65,8 +60,7 @@ public class UsersRolesService : IUsersRolesService
 
             _uw.GetRepository<AdminUserRole>().Update(userRole);
         }
-     
-
+              
         return userRole;
     }
 

@@ -16,7 +16,9 @@ using ERP.Models;
 using ERP.Models.Admin;
 using ERP.Models.Employees;
 using ERP.Models.Other;
+using ERP.Models.SP;
 
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -37,8 +39,13 @@ public class AccountService : IAccountService
         _jwtManager = jwtManager;
         _uw = uw;
     }
+        
+    public async Task<dynamic> GetUsersForModalAsync()
+    {                              
+        return await _uw.GetRepository<AdminUser>().GetAll(x => x.Status == (short)BaseStatus.Active).Select(x => new { x.Id, x.UserName, x.FirstName, x.LastName }).ToListAsync(); 
+    }
 
-    public async Task<AdminUser> GetAccountByToken(string token)
+    public async Task<AdminUser> GetAccountByTokenAsync(string token)
     {
        var session =await _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.Status == (short)SessionStatus.Login && x.AdminUser.Status == (short)BaseStatus.Active).Include(e => e.AdminUser).FirstOrDefaultAsync();
         //var session = sessionLst.Where(x => x.Token == token && x.IsValid).FirstOrDefault();
@@ -48,7 +55,7 @@ public class AccountService : IAccountService
         return session.AdminUser;
     }
 
-    public async Task<EMPEmployee> GetEmployeeByUserId(int? userId)
+    public async Task<EMPEmployee> GetEmployeeByUserIdAsync(int? userId)
     {
         var account = await _uw.GetRepository<AdminUser>().GetAll(x=> x.Status == (short)BaseStatus.Active && x.EMPEmployee.Status == (short)BaseStatus.Active && x.Id == userId).Include(e => e.EMPEmployee).FirstOrDefaultAsync();
         //var session = sessionLst.Where(x => x.Token == token && x.IsValid).FirstOrDefault();
@@ -58,7 +65,7 @@ public class AccountService : IAccountService
         return account.EMPEmployee;
     }
 
-    public async Task<EMPEmployee> GetEmployeeByToken(string token)
+    public async Task<EMPEmployee> GetEmployeeByTokenAsync(string token)
     {
         var session = await _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.Status == (short)SessionStatus.Login && x.AdminUser.Status == (short)BaseStatus.Active && x.AdminUser.EMPEmployee.Status == (short)BaseStatus.Active).Include(e => e.AdminUser).ThenInclude(x=>x.EMPEmployee).FirstOrDefaultAsync();
         //var session = sessionLst.Where(x => x.Token == token && x.IsValid).FirstOrDefault();
@@ -68,7 +75,7 @@ public class AccountService : IAccountService
         return session.AdminUser.EMPEmployee;                       
     }
 
-    public async Task<bool> IsAuthenticated(string token)
+    public async Task<bool> IsAuthenticatedAsync(string token)
     {
         if (string.IsNullOrEmpty(token.Trim()))
             throw new ValidationException(ErrorList.NotFound, "Token is required.");
@@ -76,21 +83,23 @@ public class AccountService : IAccountService
         return await _uw.GetRepository<Session>().ExistDataAsync(x => x.Token == token && x.Status == (short)SessionStatus.Login);
     }
 
-    public async Task<bool> IsAuthenticatedRole(string token, string role)
+    public async Task<bool> IsAuthenticatedRoleAsync(string token, string role)
     {
         if (string.IsNullOrEmpty(token.Trim()))
             throw new ValidationException(ErrorList.NotFound, "Token is required.");
 
-     
-var session =await _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.Status == (short)SessionStatus.Login).
-            Include(a=>a.AdminUser).
-            ThenInclude(b => b.AdminUserRole.Where(x => x.AdminRole.RoleName == role && x.AdminRole.Status == (short)BaseStatus.Active)).
-            ThenInclude(c => c.AdminRole).ToListAsync();
-                                                       
+        var user = await _uw.GetRepository<Session>().GetAll(x => x.Token == token && x.Status == (short)SessionStatus.Login && x.AdminUser.Status == (short)BaseStatus.Active).Include(e => e.AdminUser) .FirstOrDefaultAsync();
 
-        if (session == null)
+        var Params = new List<SqlParameter>();
+        Params.Add(new SqlParameter("@UserId", user.AdminUser.Id));
+        Params.Add(new SqlParameter("@RoleName", role));
+        var spResult = await _uw.GetRepository<SPIntResult>().FromSqlRaw("EXEC dbo.PermissionCheck @UserId = @UserId, @RoleName = @RoleName", Params.ToArray()).ToListAsync();
+
+        if (spResult.FirstOrDefault().SpReturnResult == 0)
+        {
             return false;
-
+        }    
+                   
         return true;
 
     }

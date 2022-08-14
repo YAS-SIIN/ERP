@@ -1,12 +1,10 @@
 ﻿using ERP.Api.Middlewares;
 using ERP.Dtos.Employees;
-using ERP.Dtos.Exceptions;
-using ERP.Dtos.Other;
+using ERP.Dtos.Exceptions;      
 using ERP.Models.Employees;
 using ERP.Service.Employees;
 using ERP.Service.Crud;
-
-using Microsoft.AspNetCore.Http;
+                                  
 using Microsoft.AspNetCore.Mvc;
 
 using static ERP.Common.Enums.TypeEnum;
@@ -34,6 +32,15 @@ public class EmployeeController : ApiControllerBase
         var result = await _crudService.GetAllAsync(x=>x.Status != (short)BaseStatus.Deleted);
 
         return OkData(result);
+    }
+
+    [HttpPost, Route("[action]")]
+    [Authorize]
+    public async Task<ActionResult<ApiResultViewModel<dynamic>>> GetEmployeesForModalAsync()
+    {
+        var result = await _crudService.GetAllAsync(x => x.Status != (short)BaseStatus.Active);
+       
+        return OkData(result.Select(x=> new {x.Id, x.FirstName, x.LastName, x.EmpoloyeeNo}));
     }
 
     [HttpPost, Route("[action]")]

@@ -1,18 +1,11 @@
 ﻿using ERP.Api.Middlewares;
 using ERP.Dtos.Cartables;
-using ERP.Dtos.Exceptions;
-using ERP.Models.Cartables;
-using ERP.Service.Admin;
-using ERP.Service.Crud;
-using ERP.Dtos.Other;
-
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ERP.Models.Admin;
+using ERP.Dtos.Exceptions;     
+using ERP.Service.Admin;            
+using Microsoft.AspNetCore.Mvc;           
 using ERP.Service.Cartables;
 using ERP.Models.SP;
-using ERP.Models.Employees;
-using ERP.Framework.Exceptions;
+using ERP.Models.Employees;          
 
 namespace ERP.Api.Controllers.Cartables
 {
@@ -59,7 +52,7 @@ namespace ERP.Api.Controllers.Cartables
         [Authorize]
         public async Task<ActionResult<ApiResultViewModel<SPCARSignList>>> ConfirmAsync(SPCARSignList model)
         {       
-            EMPEmployee employee = await _accountService.GetEmployeeByUserId(UserSession?.UserId);
+            EMPEmployee employee = await _accountService.GetEmployeeByUserIdAsync(UserSession?.UserId);
             model.EMPEmployeeId = employee.Id;
             
             var result = await _cartableService.ConfirmRequestAsync(model);

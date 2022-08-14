@@ -27,5 +27,6 @@ public class DependencyResolver
         services.AddScoped<IEmployeesService, EmployeesService>();
         services.AddScoped<IRequestLeaveService, RequestLeaveService>();  
         services.AddScoped<ICartableService, CartableService>();
+        services.AddScoped<IUsersRolesService, UsersRolesService>();
     }
 }

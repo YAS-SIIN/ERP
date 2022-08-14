@@ -33,15 +33,14 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
   
        // Role = "Test";
         if (!String.IsNullOrEmpty(Role))
-        {
-           
+        {    
             var accountService = context.HttpContext.RequestServices.GetService(typeof(IAccountService));
-            var roleResault = (accountService as IAccountService).IsAuthenticatedRole(session.Token,Role);
+            var roleResault = (accountService as IAccountService).IsAuthenticatedRoleAsync(session.Token, Role);
             if (roleResault.Result == false)
             {
                 context.Result = new StatusCodeResult(StatusCodes.Status405MethodNotAllowed);
                 return;
-            }        
+            }
         }
     }
 }

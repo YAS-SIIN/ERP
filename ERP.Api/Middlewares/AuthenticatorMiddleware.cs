@@ -25,7 +25,7 @@ public class AuthenticatorMiddleware
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
         if (token == null)
             if (context.Request.Cookies.ContainsKey("Authorization")) token = context.Request.Cookies["Authorization"];
-
+       
         if (token != null)
             await ValidateToken(context, token);
 
@@ -36,8 +36,9 @@ public class AuthenticatorMiddleware
     {
         try
         {
+            
             var accountService = context.RequestServices.GetService(typeof(IAccountService));
-            var account = await (accountService as IAccountService).GetAccountByToken(token);
+            var account = await (accountService as IAccountService).GetAccountByTokenAsync(token);
 
             context.Items["UserSession"] = new UserSessionModel()
             {

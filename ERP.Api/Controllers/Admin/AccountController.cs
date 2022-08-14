@@ -2,13 +2,12 @@
 using ERP.Common.Enums;
 using ERP.Dtos.Admin;
 using ERP.Dtos.Exceptions;
-using ERP.Framework.Exceptions;
+using ERP.Framework.Exceptions;                  
 using ERP.Models.Employees;
-using ERP.Service.Admin;
-
+using ERP.Service.Admin;     
 
 using Microsoft.AspNetCore.Mvc;
-
+                                          
 
 namespace ERP.Api.Controllers.Admin;
 
@@ -16,12 +15,22 @@ namespace ERP.Api.Controllers.Admin;
 [ApiController]
 public class AccountController : ApiControllerBase
 {                                         
-    private readonly IAccountService _accountService;
+    private readonly IAccountService _accountService;         
     public AccountController( IAccountService accountService)
     {                             
-        _accountService = accountService;
+        _accountService = accountService;              
     }
 
+
+    [HttpPost, Route("[action]")]
+    [Authorize]
+    public async Task<ActionResult<ApiResultViewModel<dynamic>>> GetUsersForModalAsync()
+    {
+        var result =await _accountService.GetUsersForModalAsync();
+
+        return OkData(result);
+    }
+         
     [HttpPost, Route("[action]")]
     public async Task<ActionResult<ApiResultViewModel<LoginModel>>> LoginAsync([FromBody] UserLoginDto model)
     {
@@ -50,7 +59,7 @@ public class AccountController : ApiControllerBase
     [HttpPost, Route("[action]")]
     public async Task<ActionResult<ApiResultViewModel<bool>>> IsAuthenticatedAsync([FromRoute] string token)
     {
-        var isAuthenticated = await _accountService.IsAuthenticated(token);
+        var isAuthenticated = await _accountService.IsAuthenticatedAsync(token);
 
         return OkData(isAuthenticated);
     }
@@ -59,7 +68,7 @@ public class AccountController : ApiControllerBase
     [Authorize]
     public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> GetAccountInfo(string token)
     {
-        var Resualt = await _accountService.GetEmployeeByToken(token);
+        var Resualt = await _accountService.GetEmployeeByTokenAsync(token);
                                  
         EMPEmployee newModel = new EMPEmployee();
         newModel.FirstName = Resualt.FirstName;

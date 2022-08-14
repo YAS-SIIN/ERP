@@ -9,13 +9,14 @@ namespace ERP.Service.Admin;
 
 public interface IAccountService
 {
-    Task<AdminUser> GetAccountByToken(string token);
-    Task<EMPEmployee> GetEmployeeByUserId(int? userId);
-    Task<EMPEmployee> GetEmployeeByToken(string token);
+    Task<dynamic> GetUsersForModalAsync();
+    Task<AdminUser> GetAccountByTokenAsync(string token);
+    Task<EMPEmployee> GetEmployeeByUserIdAsync(int? userId);
+    Task<EMPEmployee> GetEmployeeByTokenAsync(string token);
     Task<LoginModel> LoginAsync(UserLoginDto userLogin);
     Task LogoutAsync(string token);
-    Task<bool> IsAuthenticated(string token);   
-    Task<bool> IsAuthenticatedRole(string token, string role);                                                                      
+    Task<bool> IsAuthenticatedAsync(string token);   
+    Task<bool> IsAuthenticatedRoleAsync(string token, string role);                                                                      
     Task ResetPasswordVerificationCodeAsync(string mobileNumber);
     Task<ResetPasswordDto> ResetPasswordAsync(ResetPasswordDto model, int? userId);
 }

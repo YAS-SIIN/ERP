@@ -120,7 +120,6 @@ public class CrudService <T> : ICrudService<T> where T : class
 
     public Task<T> UpdateAsync(T ObjVisit)
     {
-
         _uw.GetRepository<T>().Update(ObjVisit);
         _uw.SaveChanges();
         return Task.FromResult(ObjVisit);
@@ -128,7 +127,6 @@ public class CrudService <T> : ICrudService<T> where T : class
 
     public Task<List<T>> UpdateRangeAsync(List<T> ObjVisit)
     {
-
         _uw.GetRepository<T>().UpdateRange(ObjVisit);
         _uw.SaveChanges();
         return Task.FromResult(ObjVisit);
@@ -136,7 +134,6 @@ public class CrudService <T> : ICrudService<T> where T : class
 
     public Task<T> DeleteAsync(T ObjVisit)
     {
-
         _uw.GetRepository<T>().Delete(ObjVisit);
         _uw.SaveChanges();
         return Task.FromResult(ObjVisit);
@@ -144,7 +141,6 @@ public class CrudService <T> : ICrudService<T> where T : class
 
     public Task<List<T>> DeleteRangeAsync(List<T> ObjVisit)
     {
-
         _uw.GetRepository<T>().DeleteRange(ObjVisit);
         _uw.SaveChanges();
         return Task.FromResult(ObjVisit);

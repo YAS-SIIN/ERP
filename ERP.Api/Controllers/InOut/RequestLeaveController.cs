@@ -36,7 +36,7 @@ namespace ERP.Api.Controllers.InOut
         [Authorize(Role = "RequestLeave")]
         public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> GetAsync([FromBody] RequestLeaveFilterDto model)
         {
-            EMPEmployee employee = await _accountService.GetEmployeeByUserId(UserSession?.UserId);
+            EMPEmployee employee = await _accountService.GetEmployeeByUserIdAsync(UserSession?.UserId);
 
             var result = await _requestLeaveService.GetAllByEmployeeAsync(employee);
 
@@ -64,7 +64,7 @@ namespace ERP.Api.Controllers.InOut
         [Authorize(Role = "RequestLeave")]
         public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> InsertAsync([FromBody] InOutRequestLeave model)
         {
-            EMPEmployee employee = await _accountService.GetEmployeeByUserId(UserSession?.UserId);
+            EMPEmployee employee = await _accountService.GetEmployeeByUserIdAsync(UserSession?.UserId);
             model.EMPEmployee = employee;
             model.RequestDate = DateTime.Now.ToPersianDate();
             if (!ModelState.IsValid)
@@ -94,7 +94,7 @@ namespace ERP.Api.Controllers.InOut
         [Authorize(Role = "RequestLeave")]
         public async Task<ActionResult<ApiResultViewModel<InOutRequestLeave>>> ConfirmAsync(int Id)
         {
-            EMPEmployee employee = await _accountService.GetEmployeeByUserId(UserSession?.UserId);        
+            EMPEmployee employee = await _accountService.GetEmployeeByUserIdAsync(UserSession?.UserId);        
 
             var result = await _requestLeaveService.ConfirmRequestLeaveAsync(Id, employee.Id);
 

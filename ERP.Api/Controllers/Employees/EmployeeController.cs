@@ -26,7 +26,7 @@ public class EmployeeController : ApiControllerBase
     }
 
     [HttpPost, Route("[action]")]
-    [Authorize(Role = "Employee")]
+    //[Authorize(Role = "Employee")]
     public async Task<ActionResult<ApiResultViewModel<EMPEmployee>>> GetAsync()
     {
         var result = await _crudService.GetAllAsync(x=>x.Status != (short)BaseStatus.Deleted);

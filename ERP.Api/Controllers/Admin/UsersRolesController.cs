@@ -43,7 +43,7 @@ namespace ERP.Api.Controllers.Admin
             }
             var result = await _usersRolesService.InsertUpdateUserRoleAsync(model);
 
-            return OkData(result);
+            return OkData(model);
         }
     }
 }

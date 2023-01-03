@@ -37,7 +37,7 @@ public class UsersRolesService : IUsersRolesService
         
     public async Task<dynamic> GetRolesByUserAsync(int UserId)
     {                              
-        return await _uw.GetRepository<AdminRole>().GetAll(x => x.Status == (short)BaseStatus.Active).Select(x => new { AdminRole = x, HasRole = _uw.GetRepository<AdminUserRole>().GetAll().Any(a => a.AdminRole.Id == x.Id && x.Status == (short)BaseStatus.Active && a.AdminUser.Id == UserId) }).ToListAsync();
+        return await _uw.GetRepository<AdminRole>().GetAll(x => x.Status == (short)BaseStatus.Active).Select(x => new { AdminRole = x, HasRole = _uw.GetRepository<AdminUserRole>().GetAll().Any(a => a.AdminRole.Id == x.Id && a.Status == (short)BaseStatus.Active && a.AdminUser.Id == UserId) }).ToListAsync();
     }
 
     public async Task<AdminUserRole> InsertUpdateUserRoleAsync(UserRoleDto model)
@@ -47,10 +47,11 @@ public class UsersRolesService : IUsersRolesService
         {
             userRole.AdminRole = _uw.GetRepository<AdminRole>().GetById(model.RoleId);
             userRole.AdminUser = _uw.GetRepository<AdminUser>().GetById(model.UserId);
+            userRole.Status = (short)BaseStatus.Active;
+            userRole.CreateDateTime = DateTime.Now;
 
             await _uw.GetRepository<AdminUserRole>().AddAsync(userRole);
 
-            _uw.SaveChanges();
         }  else
         {
             userRole = await _uw.GetRepository<AdminUserRole>().GetAll(x=>x.AdminRole.Id == model.RoleId && x.AdminUser.Id == model.UserId && x.Status == (short)BaseStatus.Active).FirstOrDefaultAsync();
@@ -60,7 +61,8 @@ public class UsersRolesService : IUsersRolesService
 
             _uw.GetRepository<AdminUserRole>().Update(userRole);
         }
-              
+
+        _uw.SaveChanges();
         return userRole;
     }
 

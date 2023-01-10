@@ -33,7 +33,7 @@ public class AccountService : IAccountService
     private readonly IJwtManager _jwtManager;
     private readonly IUnitOfWork _uw;
  
-    public AccountService(IOptionsMonitor<ApplicationOptions> options, ISecurity security, IJwtManager jwtManager, IUnitOfWork uw)
+    public AccountService(ISecurity security, IJwtManager jwtManager, IUnitOfWork uw)
     {
         _security = security;
         _jwtManager = jwtManager;

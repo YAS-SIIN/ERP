@@ -53,7 +53,7 @@ namespace ERP.Test.ApiTest.Admin
         }
 
         [Theory]
-        [InlineData("Yasin", "1")]
+        [InlineData("Test", "1")]
         public async void Login_ExeptSucces(string username, string passwrod)
         {
             var mdl = new UserLoginDto();

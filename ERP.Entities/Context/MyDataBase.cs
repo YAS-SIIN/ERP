@@ -72,7 +72,7 @@ public class MyDataBase : DbContext
         modelBuilder.Entity<Session>().HasOne(p => p.AdminUser).WithMany();     
 
         modelBuilder.Entity<SPIntResult>().ToTable(p=>p.ExcludeFromMigrations()).HasNoKey();    
-       modelBuilder.Entity<SPCARSignList>().ToTable(p => p.ExcludeFromMigrations()).HasNoKey();
+        modelBuilder.Entity<SPCARSignList>().ToTable(p => p.ExcludeFromMigrations()).HasNoKey();
                     
         //modelBuilder.Entity<TestTable>().Property(f => f.Id).ValueGeneratedOnAdd();
 

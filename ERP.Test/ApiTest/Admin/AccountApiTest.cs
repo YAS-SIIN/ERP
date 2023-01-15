@@ -8,9 +8,16 @@ using ERP.Entities.Context;
 using ERP.Entities.UnitOfWork;
 using ERP.Service.Admin;
 
+using MassTransit.Configuration;
+
+using Microsoft.AspNetCore.Builder.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Options;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
+using Microsoft.Identity.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
@@ -30,20 +37,35 @@ namespace ERP.Test.ApiTest.Admin
 
     public class AccountApiTest
     {
-        private readonly IOptions<ApplicationOptions>? _options;
-        private readonly ISecurity _security;
-        private readonly IJwtManager _jwtManager;
-        private readonly Mock<IUnitOfWork> _unitOfWork;
+        private readonly MyDataBase? context;
+        private readonly Dtos.Other.ApplicationOptions testOption;
+        private readonly IOptions<Dtos.Other.ApplicationOptions> _iOptions;
+        private readonly Security _security;
+        private readonly JwtManager _jwtManager;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly AccountController _accountcontroller;
         private readonly IAccountService _accountService;
         private readonly Fixture _fixture;
         public AccountApiTest()
         {
-            _security = new ERP.Common.Shared.Security();
-            _options = null;
-            _jwtManager = new ERP.Common.Shared.JwtManager(_options);
-            _unitOfWork = new Mock<IUnitOfWork>();
-            _accountService = new AccountService(_security, _jwtManager, _unitOfWork.Object);
+            DbContextOptions<MyDataBase> contextOptions;
+                                
+            testOption = new Dtos.Other.ApplicationOptions();
+            testOption.ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB; UID=sa; Password=ABCabc123456;Database=ERP;";
+     
+            var builder = new DbContextOptionsBuilder<MyDataBase>();
+                        
+            builder.UseSqlServer(testOption.ConnectionString);
+            contextOptions = builder.Options;
+            
+            context = new MyDataBase(contextOptions);
+            _iOptions = Options.Create<Dtos.Other.ApplicationOptions>(testOption);
+                      
+            _security = new Security();                              
+            _jwtManager = new JwtManager(_iOptions);   
+            _unitOfWork = new UnitOfWork(context);
+
+            _accountService = new AccountService(_security, _jwtManager, _unitOfWork);
             _fixture = new Fixture();
             _accountcontroller = new AccountController(_accountService);
                                      

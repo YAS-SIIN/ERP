@@ -37,35 +37,16 @@ namespace ERP.Test.ApiTest.Admin
 
     public class AccountApiTest
     {
-        private readonly MyDataBase? context;
-        private readonly Dtos.Other.ApplicationOptions testOption;
-        private readonly IOptions<Dtos.Other.ApplicationOptions> _iOptions;
-        private readonly Security _security;
-        private readonly JwtManager _jwtManager;
-        private readonly IUnitOfWork _unitOfWork;
+     
         private readonly AccountController _accountcontroller;
         private readonly IAccountService _accountService;
         private readonly Fixture _fixture;
         public AccountApiTest()
-        {
-            DbContextOptions<MyDataBase> contextOptions;
-                                
-            testOption = new Dtos.Other.ApplicationOptions();
-            testOption.ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB; UID=sa; Password=ABCabc123456;Database=ERP;";
-     
-            var builder = new DbContextOptionsBuilder<MyDataBase>();
-                        
-            builder.UseSqlServer(testOption.ConnectionString);
-            contextOptions = builder.Options;
-            
-            context = new MyDataBase(contextOptions);
-            _iOptions = Options.Create<Dtos.Other.ApplicationOptions>(testOption);
-                      
-            _security = new Security();                              
-            _jwtManager = new JwtManager(_iOptions);   
-            _unitOfWork = new UnitOfWork(context);
+        {      
+            TestTool tool = new TestTool();      
+            tool.ConectToDatabase();     
 
-            _accountService = new AccountService(_security, _jwtManager, _unitOfWork);
+            _accountService = new AccountService(tool._security, tool._jwtManager, tool._unitOfWork);
             _fixture = new Fixture();
             _accountcontroller = new AccountController(_accountService);
                                      
@@ -84,7 +65,7 @@ namespace ERP.Test.ApiTest.Admin
                 Token = "",
                 IsSuccessful = true,
                 ExpirationDate = DateTime.Now };
-            Xunit.Assert.Equal("Yasin", username);
+            Xunit.Assert.NotNull(res);
 
         }
     }

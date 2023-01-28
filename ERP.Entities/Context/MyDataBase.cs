@@ -11,6 +11,7 @@ using ERP.Models.SP;
 using Microsoft.EntityFrameworkCore;
 
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
 
 namespace ERP.Entities.Context;
 
@@ -73,12 +74,12 @@ public class MyDataBase : DbContext
 
         modelBuilder.Entity<SPIntResult>().ToTable(p=>p.ExcludeFromMigrations()).HasNoKey();    
         modelBuilder.Entity<SPCARSignList>().ToTable(p => p.ExcludeFromMigrations()).HasNoKey();
-                    
+
         //modelBuilder.Entity<TestTable>().Property(f => f.Id).ValueGeneratedOnAdd();
 
         //modelBuilder.Entity<Session>()
         //    .HasOne(e => e.AdminUser);
-
+ 
         base.OnModelCreating(modelBuilder);
     }
 

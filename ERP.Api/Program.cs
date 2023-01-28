@@ -1,3 +1,4 @@
+﻿using ERP.Api;
 using ERP.Api.Middlewares;
 using ERP.Dtos.Other;
 using ERP.Entities.Context;
@@ -5,12 +6,14 @@ using ERP.Entities.GenericRepository;
 using ERP.Entities.UnitOfWork;
 using ERP.Framework;
 using ERP.Models.Admin;
+using ERP.Models.Employees;
 using ERP.Service.Crud;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
@@ -82,17 +85,25 @@ builder.Services.AddOptions<ApplicationOptions>().Bind(builder.Configuration.Get
 builder.Services.AddAuthentication(x => { x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; }).AddJwtBearer();
 
 builder.Services.AddDbContext<MyDataBase>(options => options.UseSqlServer(builder.Configuration["ApplicationOptions:ConnectionString"]));
+//builder.Services.AddDbContext<MyDataBase>(options => options.UseInMemoryDatabase("MyDB"));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 ERP.Service.DependencyResolver.Register(builder.Services);
 ERP.Common.DependencyResolver.Register(builder.Services);
-
-
-builder.Services.AddResponseCaching();
  
+builder.Services.AddResponseCaching();
+
 
 var app = builder.Build();
+
+//using (var scope = app.Services.CreateScope())
+//{                                                                   
+//    var services = scope.ServiceProvider;
+//    var _uw = services.GetRequiredService<IUnitOfWork>();
+
+//    NewDataGenerator.InsertNewData(_uw);      
+//}
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<AuthenticatorMiddleware>();

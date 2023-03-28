@@ -1,4 +1,5 @@
 ﻿using ERP.Api;
+using ERP.Api.HubServices;
 using ERP.Api.Middlewares;
 using ERP.Dtos.Other;
 using ERP.Entities.Context;
@@ -12,6 +13,7 @@ using ERP.Service.Crud;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -91,9 +93,10 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 ERP.Service.DependencyResolver.Register(builder.Services);
 ERP.Common.DependencyResolver.Register(builder.Services);
- 
+
 builder.Services.AddResponseCaching();
 
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -127,6 +130,11 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseEndpoints(endPoints =>
+{
+    endPoints.MapHub<TestHub>("/testhub");
+});
 
 app.MapControllers();
 

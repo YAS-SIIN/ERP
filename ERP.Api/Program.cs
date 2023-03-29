@@ -1,27 +1,18 @@
-﻿using ERP.Api;
+﻿
+using ERP.Api.GraphQL;
 using ERP.Api.HubServices;
 using ERP.Api.Middlewares;
 using ERP.Dtos.Other;
 using ERP.Entities.Context;
-using ERP.Entities.GenericRepository;
 using ERP.Entities.UnitOfWork;
-using ERP.Framework;
-using ERP.Models.Admin;
-using ERP.Models.Employees;
-using ERP.Service.Crud;
 
-using Microsoft.AspNetCore.Authentication;
+using HotChocolate.AspNetCore;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Identity.Web;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,6 +88,7 @@ ERP.Common.DependencyResolver.Register(builder.Services);
 builder.Services.AddResponseCaching();
 
 builder.Services.AddSignalR();
+builder.Services.AddGraphQLServer().AddQueryType<EmployeeQuery>();
 
 var app = builder.Build();
 
@@ -119,23 +111,34 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("CorsPolicy");
 
-app.UseStaticFiles();
+//app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions()
 {
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+    FileProvider = new PhysicalFileProvider(System.IO.Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
     RequestPath = new PathString("/Resources")
 });
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
 
+app.UseAuthentication();
+app.UseRouting();
+app.UseAuthorization();
 app.UseEndpoints(endPoints =>
 {
     endPoints.MapHub<TestHub>("/testhub");
-});
+    endPoints.MapGraphQL("/graphql","").WithOptions(new GraphQLServerOptions
+    {
+        EnableSchemaRequests = false
+    });
+    //endPoints.MapBananaCakePop("/ui").WithOptions(new GraphQLToolOptions
+    //{
+    //    GraphQLEndpoint = "/graphql"
+    //});
 
+});
 app.MapControllers();
+
+//app.MapGraphQL("/graphql", "");
 
 app.Run();

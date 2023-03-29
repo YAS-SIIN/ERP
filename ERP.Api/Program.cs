@@ -7,6 +7,7 @@ using ERP.Entities.Context;
 using ERP.Entities.UnitOfWork;
 
 using HotChocolate.AspNetCore;
+using HotChocolate.Execution;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
@@ -14,13 +15,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 
+ 
+
 var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
 
-
-
+             
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -88,7 +90,7 @@ ERP.Common.DependencyResolver.Register(builder.Services);
 builder.Services.AddResponseCaching();
 
 builder.Services.AddSignalR();
-builder.Services.AddGraphQLServer().AddQueryType<EmployeeQuery>();
+builder.Services.AddGraphQLServer().AddQueryType<EmployeeQuery>().AddProjections().AddSorting().AddFiltering();
 
 var app = builder.Build();
 
@@ -111,7 +113,6 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("CorsPolicy");
 
-//app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions()
 {
     FileProvider = new PhysicalFileProvider(System.IO.Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
@@ -127,10 +128,7 @@ app.UseAuthorization();
 app.UseEndpoints(endPoints =>
 {
     endPoints.MapHub<TestHub>("/testhub");
-    endPoints.MapGraphQL("/graphql","").WithOptions(new GraphQLServerOptions
-    {
-        EnableSchemaRequests = false
-    });
+    endPoints.MapGraphQL("/graphql");
     //endPoints.MapBananaCakePop("/ui").WithOptions(new GraphQLToolOptions
     //{
     //    GraphQLEndpoint = "/graphql"

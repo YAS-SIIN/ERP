@@ -13,9 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="7.3.0" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="13.0.5" />
-    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="13.0.5" />
     <PackageReference Include="HotChocolate.Data" Version="13.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.6" />

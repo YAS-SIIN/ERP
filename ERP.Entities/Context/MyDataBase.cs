@@ -38,7 +38,9 @@ public class MyDataBase : DbContext
     public DbSet<CARTable> CARTables { get; set; }
     #endregion
 
-    #region Employe    
+    #region Employe  
+
+    [UseSorting]
     public DbSet<EMPEmployee> EMPEmployees { get; set; }
     #endregion
 

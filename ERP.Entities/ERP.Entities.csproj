@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ERP.Common\ERP.Common.csproj" />
     <ProjectReference Include="..\ERP.Models\ERP.Models.csproj" />
   </ItemGroup>
 

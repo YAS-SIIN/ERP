@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 
+using static ERP.Common.Enums.TypeEnum;
+
 namespace ERP.Entities.Context;
 
 public class MyDataBase : DbContext
@@ -66,6 +68,7 @@ public class MyDataBase : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
+        modelBuilder.Entity<EMPEmployee>().HasQueryFilter(a => a.Status != (short)BaseStatus.Deleted);
         modelBuilder.Entity<EMPEmployee>().HasIndex(b => b.EmpoloyeeNo).IsUnique();
 
         modelBuilder.Entity<EMPEmployee>().HasIndex(b => b.NationalCode).IsUnique();
